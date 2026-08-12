@@ -5,13 +5,14 @@ extends Effect
 var status: StatusEffect
 
 
+func _init(status: StatusEffect) -> void:
+	self.status = status
+
+
 func apply(source: Combatant, target: Combatant) -> Result:
 	var res := Result.new()
 	
-	var poison := StatusEffect.new()
-	poison.duration = 2
-	poison.amount = 2.0
-	target.status_effects.append(poison)
+	target.status_effects.append(status)
 	
 	res.source = source
 	res.target = target

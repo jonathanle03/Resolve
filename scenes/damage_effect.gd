@@ -2,13 +2,17 @@ class_name DamageEffect
 extends Effect
 
 
-var ratio: float = 0.5
+var amount: float
+
+
+func _init(amount: float) -> void:
+	self.amount = amount
 
 
 func apply(source: Combatant, target: Combatant) -> Result:
 	var res := Result.new()
 	
-	var damage_dealt = target.take_damage(source.attack * ratio)
+	var damage_dealt := target.take_damage(amount)
 	
 	res.source = source
 	res.target = target

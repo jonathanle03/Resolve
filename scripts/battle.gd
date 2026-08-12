@@ -7,9 +7,9 @@ signal hit_landed(amount: float)
 @onready var _battle_view: Node2D = %BattleView
 
 var player := Combatant.new(20.0, 5.0)
-var enemy := Combatant.new(10.0, 2.0)
-var damage_effect := DamageEffect.new()
-var poison_effect := ApplyStatusEffect.new()
+var enemy := Combatant.new(100.0, 2.0)
+var damage_effect := DamageEffect.new(player.attack * 0.5)
+var poison_effect := ApplyStatusEffect.new(StatusEffect.new([DamageEffect.new(player.attack * 0.2)]))
 var action := Action.new()
 
 
@@ -29,12 +29,14 @@ func _unhandled_input(event: InputEvent) -> void:
 			if result.kind == "attack":
 				hit_landed.emit(result.amount)
 				print("Deal %s damage" % result.amount)
-			
+	
 	elif event.is_action_released("ui_cancel"):
 		for status_effect in enemy.status_effects:
-			var result := status_effect.tick(enemy)
-			print("Deal %s damage" % result.amount)
+			var results := status_effect.on_turn_end(enemy)
+			for result in results:
+				print("Deal %s damage" % result.amount)
 		
 		for status_effect in player.status_effects:
-			var result := status_effect.tick(player)
-			print("Deal %s damage" % result.amount)
+			var results := status_effect.on_turn_end(player)
+			for result in results:
+				print("Deal %s damage" % result.amount)
