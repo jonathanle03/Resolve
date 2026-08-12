@@ -20,8 +20,8 @@ func on_hit_landed(amount: float) -> void:
 	tween.chain().tween_callback(
 		func () -> void:
 			var damage_label := Label.new()
-			add_child(damage_label)
-			damage_label.text = "4"
+			add_child(damage_label)	
+			damage_label.text = str(floori(amount))
 			damage_label.global_position = _enemy_unit.global_position
 			
 			var damage_label_tween := create_tween()

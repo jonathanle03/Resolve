@@ -1,23 +1,23 @@
 [gd_scene format=3 uid="uid://dsh8y6ogu1sfl"]
 
-[ext_resource type="Texture2D" uid="uid://b7pfyanex8w1u" path="res://icon.svg" id="1_ip7xm"]
-[ext_resource type="Script" uid="uid://dgj0p46byj4ne" path="res://scripts/battle.gd" id="1_oxp8w"]
-[ext_resource type="Script" uid="uid://135xenhon7r" path="res://scripts/battle_view.gd" id="2_7sfm4"]
+[ext_resource type="Script" uid="uid://dgj0p46byj4ne" path="res://scripts/battle.gd" id="1_p1qf1"]
+[ext_resource type="Script" uid="uid://135xenhon7r" path="res://scripts/battle_view.gd" id="2_a12nh"]
+[ext_resource type="Texture2D" uid="uid://b7pfyanex8w1u" path="res://icon.svg" id="3_lpir7"]
 
 [node name="Battle" type="Node2D" unique_id=1676052002]
-script = ExtResource("1_oxp8w")
+script = ExtResource("1_p1qf1")
 
 [node name="BattleView" type="Node2D" parent="." unique_id=1864577347]
 unique_name_in_owner = true
-script = ExtResource("2_7sfm4")
+script = ExtResource("2_a12nh")
 
 [node name="EnemyUnit" type="Sprite2D" parent="BattleView" unique_id=1555885263]
 unique_name_in_owner = true
 modulate = Color(1, 0.09803922, 0.09803922, 1)
 position = Vector2(352, 320)
-texture = ExtResource("1_ip7xm")
+texture = ExtResource("3_lpir7")
 
 [node name="AllyUnit" type="Sprite2D" parent="BattleView" unique_id=1930298946]
 unique_name_in_owner = true
 position = Vector2(800, 320)
-texture = ExtResource("1_ip7xm")
+texture = ExtResource("3_lpir7")
