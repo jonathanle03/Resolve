@@ -2,6 +2,7 @@ class_name Combatant
 extends RefCounted
 
 
+var name: String
 var max_hp: float
 var hp: float
 var attack: float
@@ -9,7 +10,8 @@ var status_effects: Array[StatusEffect]
 var is_dead: bool
 
 
-func _init(max_hp: float, attack: float) -> void:
+func _init(name: String, max_hp: float, attack: float) -> void:
+	self.name = name
 	self.max_hp = max_hp
 	self.hp = max_hp
 	self.attack = attack

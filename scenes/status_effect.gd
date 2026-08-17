@@ -9,7 +9,11 @@ var on_turn_start_effects: Array[Effect]
 var on_turn_end_effects: Array[Effect]
 
 
-func _init(on_turn_end_effects: Array[Effect]) -> void:
+func _init(duration: int, on_apply_effects: Array[Effect], on_remove_effects: Array[Effect], on_turn_start_effects: Array[Effect], on_turn_end_effects: Array[Effect]) -> void:
+	self.duration = duration
+	self.on_apply_effects = on_apply_effects
+	self.on_remove_effects = on_remove_effects
+	self.on_turn_start_effects = on_turn_start_effects
 	self.on_turn_end_effects = on_turn_end_effects
 
 
@@ -39,3 +43,8 @@ func on_turn_end(target: Combatant) -> Array[Result]:
 	for effect in on_turn_end_effects:
 		arr.append(effect.apply(null, target))
 	return arr
+
+
+func clone() -> StatusEffect:
+	var status := StatusEffect.new(duration, on_apply_effects, on_remove_effects, on_turn_start_effects, on_turn_end_effects)
+	return status
