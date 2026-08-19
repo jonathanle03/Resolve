@@ -10,3 +10,4 @@ var target: Combatant
 var kind: ResultKind
 var amount: float
 var hp_after: float
+var status: StatusEffect

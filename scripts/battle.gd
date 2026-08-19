@@ -1,104 +1,114 @@
 extends Node2D
 
 
-signal hit_landed(amount: float)
-
-
 @onready var _battle_view: Node2D = %BattleView
+
+
+enum BattleStates { START, SELECT, RESOLVE, PRESENT, VICTORY, DEFEAT }
+var state := BattleStates.START
 
 
 var player := Combatant.new("Player", 250.0, 5.0)
 var enemy := Combatant.new("Enemy", 20.0, 2.0)
 var player_damage_effect := DamageEffect.new(player.attack * 0.5)
 var enemy_damage_effect := DamageEffect.new(enemy.attack * 0.5)
-var player_poison_effect := ApplyStatusEffect.new(StatusEffect.new(3, [], [], [], [DamageEffect.new(player.attack * 0.2)]))
+var player_poison_effect := ApplyStatusEffect.new(StatusEffect.new(
+	3, [], [], [], [DamageEffect.new(player.attack * 0.2)]
+))
 var player_action := Action.new()
 var enemy_action := Action.new()
 
 
+var player_team: Array[Combatant]
+var enemy_team: Array[Combatant]
+var turn_order: Array[Combatant]
+
+
 func _ready() -> void:
-	hit_landed.connect(_battle_view.on_hit_landed)
-	
-	player_action.source = player
-	player_action.target = enemy
-	player_action.effects.append(player_damage_effect)
-	player_action.effects.append(player_poison_effect)
-	
-	enemy_action.source = enemy
-	enemy_action.target = player
-	enemy_action.effects.append(enemy_damage_effect)
+	advance()
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_released("ui_accept"):
-		var actions: Array[Action] = [player_action, enemy_action]
-		var results := resolution(actions)
-		
-		for result in results:
-			prints(result.source.name if result.source else null, result.target.name if result.target else null, Result.ResultKind.keys()[result.kind], result.amount, result.hp_after)
+		advance()
 
 
-func resolution(actions: Array[Action]) -> Array[Result]:
-	var results: Array[Result] = []
+func advance() -> void:
+	var actions: Array[Action]
+	var results: Array[Result]
 	
-	
-	for action in actions:
-		if action.source.is_dead:
-			continue
-		
-		
-		var prev_source_is_dead := action.source.is_dead
-		var prev_target_is_dead := action.target.is_dead
-		
-		
-		# On Turn Start
-		for status in action.source.status_effects:
-			results.append_array(status.on_turn_start(action.source))
-		
-		if not prev_source_is_dead and action.source.is_dead:
-			prev_source_is_dead = true
-			var res = Result.new()
-			res.source = null
-			res.target = action.source
-			res.kind = Result.ResultKind.DEATH
-			results.append(res)
-			continue
-		
-		
-		# Perform Action
-		for effect in action.effects:
-			results.append(effect.apply(action.source, action.target))
-		
-		if not prev_target_is_dead and action.target.is_dead:
-			prev_target_is_dead = true
-			var res = Result.new()
-			res.source = null
-			res.target = action.target
-			res.kind = Result.ResultKind.DEATH
-			results.append(res)
-		
-		
-		# On Turn End
-		var removed_statuses: Array[StatusEffect] = []
-		for status in action.source.status_effects:
-			results.append_array(status.on_turn_end(action.source))
+	while (true):
+		match state:
+			BattleStates.START:
+				state = _battle_start()
 			
-			if status.duration > 0:
-				status.duration -= 1
-			if status.duration == 0:
-				results.append_array(status.on_remove(action.source))
-				removed_statuses.append(status)
+			BattleStates.SELECT:
+				actions = [player_action, enemy_action]
+				state = BattleStates.RESOLVE
+				
+			BattleStates.RESOLVE:
+				results = Resolution.resolve(actions)
+				state = BattleStates.PRESENT
+				
+			BattleStates.PRESENT:
+				state = _present(results)
+				
+			BattleStates.VICTORY:
+				get_tree().change_scene_to_file("uid://dsh8y6ogu1sfl")
+				
+			BattleStates.DEFEAT:
+				get_tree().change_scene_to_file("uid://dsh8y6ogu1sfl")
 		
-		for status in removed_statuses:
-			action.source.status_effects.erase(status)
-		
-		if not prev_source_is_dead and action.source.is_dead:
-			prev_source_is_dead = true
-			var res = Result.new()
-			res.source = null
-			res.target = action.source
-			res.kind = Result.ResultKind.DEATH
-			results.append(res)
+		if state == BattleStates.SELECT or state == BattleStates.VICTORY or state == BattleStates.DEFEAT:
+			break
+
+
+func _battle_start() -> BattleStates:
+	player_action.source = player
+	player_action.target = enemy
+	player_action.effects.append(player_damage_effect)
+	player_action.effects.append(player_poison_effect)
+	player_team.append(player)
 	
+	enemy_action.source = enemy
+	enemy_action.target = player
+	enemy_action.effects.append(enemy_damage_effect)
+	enemy_team.append(enemy)
 	
-	return results
+	turn_order.append(player)
+	turn_order.append(enemy)
+	
+	return BattleStates.SELECT
+
+
+func _present(results: Array[Result]) -> BattleStates:
+	# TODO: Replace this with Presentation phase
+	for result in results:
+		prints(
+			result.source.name if result.source else null,
+			result.target.name if result.target else null,
+			Result.ResultKind.keys()[result.kind],
+			result.amount,
+			result.hp_after
+		)
+	
+	var all_allies_defeated := true
+	for ally_unit in player_team:
+		if not ally_unit.is_dead:
+			all_allies_defeated = false
+	
+	var all_enemies_defeated := true
+	for enemy_unit in enemy_team: # Change back to "enemy" later
+		if not enemy_unit.is_dead:
+			all_enemies_defeated = false
+	
+	var next_state := BattleStates.SELECT
+	
+	if all_allies_defeated:
+		print("Game Over!")
+		next_state = BattleStates.DEFEAT
+	elif all_enemies_defeated:
+		print("Victory!")
+		next_state = BattleStates.VICTORY
+	
+	return next_state
