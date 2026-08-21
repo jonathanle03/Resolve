@@ -5,21 +5,22 @@ extends Node2D
 
 
 enum BattleStates { START, SELECT, RESOLVE, PRESENT, VICTORY, DEFEAT }
+const BLOCKING_STATES := [BattleStates.SELECT, BattleStates.VICTORY, BattleStates.DEFEAT]
 var state := BattleStates.START
 
 
-var player := Combatant.new("Player", 250.0, 5.0)
+var ally := Combatant.new("Ally", 250.0, 5.0)
 var enemy := Combatant.new("Enemy", 20.0, 2.0)
-var player_damage_effect := DamageEffect.new(player.attack * 0.5)
+var ally_damage_effect := DamageEffect.new(ally.attack * 0.5)
 var enemy_damage_effect := DamageEffect.new(enemy.attack * 0.5)
-var player_poison_effect := ApplyStatusEffect.new(StatusEffect.new(
-	3, [], [], [], [DamageEffect.new(player.attack * 0.2)]
+var ally_poison_effect := ApplyStatusEffect.new(StatusEffect.new(
+	3, [], [], [], [DamageEffect.new(ally.attack * 0.2)]
 ))
-var player_action := Action.new()
+var ally_action := Action.new()
 var enemy_action := Action.new()
 
 
-var player_team: Array[Combatant]
+var ally_team: Array[Combatant]
 var enemy_team: Array[Combatant]
 var turn_order: Array[Combatant]
 
@@ -29,7 +30,7 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_released("ui_accept"):
+	if event.is_action_released("ui_accept") and state in BLOCKING_STATES:
 		advance()
 
 
@@ -43,7 +44,7 @@ func advance() -> void:
 				state = _battle_start()
 			
 			BattleStates.SELECT:
-				actions = [player_action, enemy_action]
+				actions = [ally_action, enemy_action]
 				state = BattleStates.RESOLVE
 				
 			BattleStates.RESOLVE:
@@ -51,7 +52,7 @@ func advance() -> void:
 				state = BattleStates.PRESENT
 				
 			BattleStates.PRESENT:
-				state = _present(results)
+				state = await _present(results)
 				
 			BattleStates.VICTORY:
 				get_tree().change_scene_to_file("uid://dsh8y6ogu1sfl")
@@ -59,24 +60,26 @@ func advance() -> void:
 			BattleStates.DEFEAT:
 				get_tree().change_scene_to_file("uid://dsh8y6ogu1sfl")
 		
-		if state == BattleStates.SELECT or state == BattleStates.VICTORY or state == BattleStates.DEFEAT:
+		if state in BLOCKING_STATES:
 			break
 
 
 func _battle_start() -> BattleStates:
-	player_action.source = player
-	player_action.target = enemy
-	player_action.effects.append(player_damage_effect)
-	player_action.effects.append(player_poison_effect)
-	player_team.append(player)
+	ally_action.source = ally
+	ally_action.target = enemy
+	ally_action.effects.append(ally_damage_effect)
+	ally_action.effects.append(ally_poison_effect)
+	ally_team.append(ally)
 	
 	enemy_action.source = enemy
-	enemy_action.target = player
+	enemy_action.target = ally
 	enemy_action.effects.append(enemy_damage_effect)
 	enemy_team.append(enemy)
 	
-	turn_order.append(player)
+	turn_order.append(ally)
 	turn_order.append(enemy)
+	
+	_battle_view.setup(ally_team, enemy_team)
 	
 	return BattleStates.SELECT
 
@@ -92,8 +95,10 @@ func _present(results: Array[Result]) -> BattleStates:
 			result.hp_after
 		)
 	
+	await _battle_view.present(results)
+	
 	var all_allies_defeated := true
-	for ally_unit in player_team:
+	for ally_unit in ally_team:
 		if not ally_unit.is_dead:
 			all_allies_defeated = false
 	
