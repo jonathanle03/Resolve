@@ -6,7 +6,12 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_18jcc"]
 size = Vector2(16, 16)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_18jcc"]
+radius = 28.01785
+
 [node name="Player" type="CharacterBody2D" unique_id=998365929]
+collision_layer = 2
+collision_mask = 5
 script = ExtResource("1_g2els")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=357094739]
@@ -17,3 +22,11 @@ shape = SubResource("RectangleShape2D_18jcc")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=2009003977]
 zoom = Vector2(4, 4)
+
+[node name="Area2D" type="Area2D" parent="." unique_id=411653598]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=365541450]
+shape = SubResource("CircleShape2D_18jcc")

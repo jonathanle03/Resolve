@@ -18,6 +18,6 @@ func apply(source: Combatant, target: Combatant) -> Result:
 	res.target = target
 	res.kind = Result.ResultKind.DAMAGE
 	res.amount = damage_dealt
-	res.hp_after = target.hp
+	res.health_after = target.current_health
 	
 	return res

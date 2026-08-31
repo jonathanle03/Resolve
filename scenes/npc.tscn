@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://8hboctqavbpv"]
+
+[ext_resource type="Script" uid="uid://t6ava8rdpmyd" path="res://scripts/npc.gd" id="1_abqhh"]
+[ext_resource type="Texture2D" uid="uid://duk4exrhdg337" path="res://assets/tile_0097.png" id="1_nh2m4"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_18jcc"]
+size = Vector2(16, 16)
+
+[node name="NPC" type="StaticBody2D" unique_id=105354870]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_abqhh")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1494481189]
+texture = ExtResource("1_nh2m4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=354445844]
+shape = SubResource("RectangleShape2D_18jcc")
+
+[node name="Prompt" type="Label" parent="." unique_id=1183454160]
+unique_name_in_owner = true
+visible = false
+offset_left = -5.0
+offset_top = -26.0
+offset_right = 6.0
+offset_bottom = -3.0
+text = "!"
+horizontal_alignment = 1
+vertical_alignment = 1

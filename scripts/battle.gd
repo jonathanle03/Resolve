@@ -9,20 +9,12 @@ const BLOCKING_STATES := [BattleStates.SELECT, BattleStates.VICTORY, BattleState
 var state := BattleStates.START
 
 
-var ally := Combatant.new("Ally", 250.0, 5.0)
-var enemy := Combatant.new("Enemy", 20.0, 2.0)
-var ally_damage_effect := DamageEffect.new(ally.attack * 0.5)
-var enemy_damage_effect := DamageEffect.new(enemy.attack * 0.5)
-var ally_poison_effect := ApplyStatusEffect.new(StatusEffect.new(
-	3, [], [], [], [DamageEffect.new(ally.attack * 0.2)]
-))
-var ally_action := Action.new()
-var enemy_action := Action.new()
-
-
 var ally_team: Array[Combatant]
 var enemy_team: Array[Combatant]
 var turn_order: Array[Combatant]
+
+
+var party_member_map: Dictionary[PartyMember, Combatant]
 
 
 func _ready() -> void:
@@ -44,7 +36,7 @@ func advance() -> void:
 				state = _battle_start()
 			
 			BattleStates.SELECT:
-				actions = [ally_action, enemy_action]
+				actions = _select_actions()
 				state = BattleStates.RESOLVE
 				
 			BattleStates.RESOLVE:
@@ -55,44 +47,71 @@ func advance() -> void:
 				state = await _present(results)
 				
 			BattleStates.VICTORY:
-				get_tree().change_scene_to_file("uid://dsh8y6ogu1sfl")
+				for party_member in GameState.party_members:
+					party_member.current_health = party_member_map[party_member].current_health
+				GameState.returning_from_battle = true
+				get_tree().change_scene_to_file("uid://br1ry85r6s0ql")
 				
 			BattleStates.DEFEAT:
-				get_tree().change_scene_to_file("uid://dsh8y6ogu1sfl")
+				get_tree().change_scene_to_file("uid://dsh8y6ogu1sfl") # Replay battle for now
 		
 		if state in BLOCKING_STATES:
 			break
 
 
 func _battle_start() -> BattleStates:
-	ally_action.source = ally
-	ally_action.target = enemy
-	ally_action.effects.append(ally_damage_effect)
-	ally_action.effects.append(ally_poison_effect)
-	ally_team.append(ally)
+	for party_member in GameState.party_members:
+		var ally := party_member.build_combatant()
+		ally_team.append(ally)
+		party_member_map[party_member] = ally
 	
-	enemy_action.source = enemy
-	enemy_action.target = ally
-	enemy_action.effects.append(enemy_damage_effect)
-	enemy_team.append(enemy)
+	enemy_team = GameState.enemies
 	
-	turn_order.append(ally)
-	turn_order.append(enemy)
+	turn_order.append_array(ally_team)
+	turn_order.append_array(enemy_team)
 	
 	_battle_view.setup(ally_team, enemy_team)
 	
 	return BattleStates.SELECT
 
 
+func _select_actions() -> Array[Action]:
+	var actions: Array[Action] = []
+	
+	for ally in ally_team:
+		var ally_action := Action.new()
+		ally_action.source = ally
+		ally_action.target = enemy_team[0]
+
+		var ally_damage_effect := DamageEffect.new(ally.attack * 0.5)
+		var ally_poison_effect := ApplyStatusEffect.new(StatusEffect.new(
+			3, [], [], [], [DamageEffect.new(ally.attack * 0.2)]
+		))
+		ally_action.effects.append(ally_damage_effect)
+		ally_action.effects.append(ally_poison_effect)
+		
+		actions.append(ally_action)
+	
+	for enemy in enemy_team:
+		var enemy_action := Action.new()
+		var enemy_damage_effect := DamageEffect.new(enemy.attack * 0.5)
+		enemy_action.source = enemy
+		enemy_action.target = ally_team[0]
+		enemy_action.effects.append(enemy_damage_effect)
+		
+		actions.append(enemy_action)
+	
+	return actions
+
+
 func _present(results: Array[Result]) -> BattleStates:
-	# TODO: Replace this with Presentation phase
 	for result in results:
 		prints(
 			result.source.name if result.source else null,
 			result.target.name if result.target else null,
 			Result.ResultKind.keys()[result.kind],
 			result.amount,
-			result.hp_after
+			result.health_after
 		)
 	
 	await _battle_view.present(results)
@@ -103,7 +122,7 @@ func _present(results: Array[Result]) -> BattleStates:
 			all_allies_defeated = false
 	
 	var all_enemies_defeated := true
-	for enemy_unit in enemy_team: # Change back to "enemy" later
+	for enemy_unit in enemy_team:
 		if not enemy_unit.is_dead:
 			all_enemies_defeated = false
 	
