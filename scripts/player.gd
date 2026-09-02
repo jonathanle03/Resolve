@@ -9,11 +9,7 @@ var tracked_npc: NPC = null
 
 
 func _ready() -> void:
-	if not GameState.returning_from_battle:
-		# TODO: Shouldn't create party members here, move to button on title screen later
-		var party_member := PartyMember.new("Ally", 250.0, 250.0, 5.0)
-		GameState.party_members = [party_member]
-	else:
+	if GameState.returning_from_battle:
 		global_position = GameState.overworld_position
 	
 	_area_2d.body_entered.connect(_on_area_2d_body_entered)

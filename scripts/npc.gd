@@ -8,7 +8,8 @@ extends StaticBody2D
 func interact() -> void:
 	GameState.overworld_position = global_position
 	
-	var enemy := Combatant.new("Enemy", 20.0, 20.0, 2.0)
+	# TODO: Update when enemy resources are implemented
+	var enemy := {"name": "Enemy", "max_health": 20.0, "attack": 2.0}
 	GameState.enemies = [enemy]
 	
 	get_tree().change_scene_to_file("uid://dsh8y6ogu1sfl")

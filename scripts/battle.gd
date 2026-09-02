@@ -50,10 +50,10 @@ func advance() -> void:
 				for party_member in GameState.party_members:
 					party_member.current_health = party_member_map[party_member].current_health
 				GameState.returning_from_battle = true
-				get_tree().change_scene_to_file("uid://br1ry85r6s0ql")
+				get_tree().change_scene_to_file("uid://mtwtyjlq7lkx")
 				
 			BattleStates.DEFEAT:
-				get_tree().change_scene_to_file("uid://dsh8y6ogu1sfl") # Replay battle for now
+				get_tree().change_scene_to_file("uid://chn2oyk85qt5m")
 		
 		if state in BLOCKING_STATES:
 			break
@@ -65,7 +65,10 @@ func _battle_start() -> BattleStates:
 		ally_team.append(ally)
 		party_member_map[party_member] = ally
 	
-	enemy_team = GameState.enemies
+	# TODO: Update when enemy resources are implemented
+	for enemy in GameState.enemies:
+		var enemy_combatant := Combatant.new(enemy["name"], enemy["max_health"], enemy["attack"])
+		enemy_team.append(enemy_combatant)
 	
 	turn_order.append_array(ally_team)
 	turn_order.append_array(enemy_team)

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Resolve"
-run/main_scene="uid://br1ry85r6s0ql"
+run/main_scene="uid://dix75hobg1j0r"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
