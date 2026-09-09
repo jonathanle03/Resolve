@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://n45ylqy0og1n"]
+
+[ext_resource type="Script" uid="uid://bnikbp4372x1f" path="res://scripts/dialogue_box.gd" id="1_rc1id"]
+
+[node name="DialogueBox" type="CanvasLayer" unique_id=198563650]
+script = ExtResource("1_rc1id")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1753003480]
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.2
+offset_bottom = 0.3199997
+grow_horizontal = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=1759219144]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer" unique_id=2100449637]
+unique_name_in_owner = true
+layout_mode = 2
+text = "insert dialogue here"
+autowrap_mode = 3

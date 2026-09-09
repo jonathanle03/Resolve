@@ -5,7 +5,11 @@ extends StaticBody2D
 @onready var _prompt: Label = %Prompt
 
 
+var dialogue: Array[String] = ["Hey you!", "Rapiers are not swords!"]
+
+
 func interact() -> void:
+	await DialogueBox.show_dialogue(dialogue)
 	GameState.overworld_position = global_position
 	
 	# TODO: Update when enemy resources are implemented
