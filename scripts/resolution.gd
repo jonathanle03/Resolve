@@ -21,28 +21,18 @@ static func resolve(actions: Array[Action]) -> Array[Result]:
 		
 		if not prev_source_is_dead and action.source.is_dead:
 			prev_source_is_dead = true
-			var res := Result.new()
-			res.source = null
-			res.target = action.source
-			res.kind = Result.ResultKind.DEATH
-			results.append(res)
+			results.append(_death_result(action.source))
 			continue
 		
 		
 		# Perform Action
 		for effect in action.effects:
 			var res := effect.apply(action.source, action.target)
-			results.append(res)
-			if res.kind == Result.ResultKind.STATUS_APPLIED:
-				results.append_array(res.status.on_apply(action.target))
+			results.append_array(res)
 		
 		if not prev_target_is_dead and action.target.is_dead:
 			prev_target_is_dead = true
-			var res = Result.new()
-			res.source = null
-			res.target = action.target
-			res.kind = Result.ResultKind.DEATH
-			results.append(res)
+			results.append(_death_result(action.target))
 		
 		
 		# On Turn End
@@ -61,11 +51,15 @@ static func resolve(actions: Array[Action]) -> Array[Result]:
 		
 		if not prev_source_is_dead and action.source.is_dead:
 			prev_source_is_dead = true
-			var res = Result.new()
-			res.source = null
-			res.target = action.source
-			res.kind = Result.ResultKind.DEATH
-			results.append(res)
+			results.append(_death_result(action.source))
 	
 	
 	return results
+
+
+static func _death_result(target: Combatant) -> Result:
+	var res := Result.new()
+	res.source = null
+	res.target = target
+	res.kind = Result.ResultKind.DEATH
+	return res

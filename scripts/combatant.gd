@@ -2,6 +2,9 @@ class_name Combatant
 extends RefCounted
 
 
+enum Stat { ATTACK }
+
+
 var name: String
 var max_health: float
 var current_health: float
@@ -25,3 +28,10 @@ func take_damage(amount: float) -> float:
 	current_health = maxf(0, current_health)
 	is_dead = current_health == 0
 	return prev_health - current_health
+
+
+func heal_health(amount: float) -> float:
+	var prev_health = current_health
+	current_health += amount
+	current_health = minf(current_health, max_health)
+	return current_health - prev_health

@@ -1,4 +1,4 @@
-class_name DamageEffect
+class_name HealEffect
 extends Effect
 
 
@@ -12,12 +12,12 @@ func _init(amount: float) -> void:
 func apply(source: Combatant, target: Combatant) -> Array[Result]:
 	var res := Result.new()
 	
-	var damage_dealt := target.take_damage(amount)
+	var health_healed := target.heal_health(amount)
 	
 	res.source = source
 	res.target = target
-	res.kind = Result.ResultKind.DAMAGE
-	res.amount = damage_dealt
+	res.kind = Result.ResultKind.HEAL
+	res.amount = health_healed
 	res.health_after = target.current_health
 	
 	return [res]

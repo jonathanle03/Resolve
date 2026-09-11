@@ -9,7 +9,7 @@ func _init(status: StatusEffect) -> void:
 	self.status = status
 
 
-func apply(source: Combatant, target: Combatant) -> Result:
+func apply(source: Combatant, target: Combatant) -> Array[Result]:
 	var res := Result.new()
 	
 	var cloned_status := status.clone()
@@ -20,4 +20,6 @@ func apply(source: Combatant, target: Combatant) -> Result:
 	res.kind = Result.ResultKind.STATUS_APPLIED
 	res.status = cloned_status
 	
-	return res
+	var results: Array[Result] = [res]
+	results.append_array(cloned_status.on_apply(target))
+	return results

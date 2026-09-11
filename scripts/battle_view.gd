@@ -35,7 +35,9 @@ func present(results: Array[Result]) -> void:
 					await fallback_animation(combatant_node_map[source], combatant_node_map[target])
 				
 			Result.ResultKind.HEAL:
-				pass
+				var target := result.target
+				combatant_node_map[target].get_node("ProgressBar").value = result.health_after
+				
 			Result.ResultKind.STATUS_APPLIED:
 				pass
 			Result.ResultKind.DEATH:
