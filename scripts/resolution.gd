@@ -2,28 +2,27 @@ class_name Resolution
 extends RefCounted
 
 
-static func resolve(actions: Array[Action]) -> Array[Result]:
+static func resolve_turn_start(combatant: Combatant) -> Array[Result]:
 	var results: Array[Result] = []
 	
+	# On Turn Start
+	for status in combatant.status_effects:
+		results.append_array(status.on_turn_start(combatant))
+	
+	if combatant.is_dead:
+		results.append(_death_result(combatant))
+	
+	return results
+
+
+static func resolve(actions: Array[Action]) -> Array[Result]:
+	var results: Array[Result] = []
 	
 	for action in actions:
 		if action.source.is_dead:
 			continue
 		
-		
-		var prev_source_is_dead := action.source.is_dead
 		var prev_target_is_dead := action.target.is_dead
-		
-		
-		# On Turn Start
-		for status in action.source.status_effects:
-			results.append_array(status.on_turn_start(action.source))
-		
-		if not prev_source_is_dead and action.source.is_dead:
-			prev_source_is_dead = true
-			results.append(_death_result(action.source))
-			continue
-		
 		
 		# Perform Action
 		for effect in action.effects:
@@ -33,7 +32,6 @@ static func resolve(actions: Array[Action]) -> Array[Result]:
 		if not prev_target_is_dead and action.target.is_dead:
 			prev_target_is_dead = true
 			results.append(_death_result(action.target))
-		
 		
 		# On Turn End
 		var removed_statuses: Array[StatusEffect] = []
@@ -49,10 +47,8 @@ static func resolve(actions: Array[Action]) -> Array[Result]:
 		for status in removed_statuses:
 			action.source.status_effects.erase(status)
 		
-		if not prev_source_is_dead and action.source.is_dead:
-			prev_source_is_dead = true
+		if action.source.is_dead:
 			results.append(_death_result(action.source))
-	
 	
 	return results
 
