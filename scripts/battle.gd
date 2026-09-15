@@ -121,7 +121,7 @@ func _select_actions(combatant: Combatant) -> Array[Action]:
 
 		var ally_damage_effect := DamageEffect.new(combatant.attack)
 		var ally_poison_effect := ApplyStatusEffect.new(StatusEffect.new(
-			3, [], [], [], [DamageEffect.new(combatant.attack * 0.2)]
+			3, StatusEffect.Category.NEUTRAL, [], [], [], [DamageEffect.new(combatant.attack * 0.2)]
 		))
 		ally_action.effects.append(ally_damage_effect)
 		ally_action.effects.append(ally_poison_effect)
@@ -143,13 +143,21 @@ func _select_actions(combatant: Combatant) -> Array[Action]:
 		
 		var enemy_attack_buff_action := Action.new()
 		var enemy_attack_buff_effect := ApplyStatusEffect.new(StatusEffect.new(
-			3, [ModifyStatEffect.new(Combatant.Stat.ATTACK, 2)], [ModifyStatEffect.new(Combatant.Stat.ATTACK, -2)], [], []
+			3, StatusEffect.Category.BUFF, [ModifyStatEffect.new(Combatant.Stat.ATTACK, 2)], [ModifyStatEffect.new(Combatant.Stat.ATTACK, -2)], [], []
 		))
 		enemy_attack_buff_action.source = combatant
 		enemy_attack_buff_action.target = combatant
 		enemy_attack_buff_action.effects.append(enemy_attack_buff_effect)
 		
-		var enemy_skills: Array[Action] = [enemy_damage_action, enemy_heal_action, enemy_attack_buff_action]
+		var enemy_attack_debuff_action := Action.new()
+		var enemy_attack_debuff_effect := ApplyStatusEffect.new(StatusEffect.new(
+			3, StatusEffect.Category.DEBUFF, [ModifyStatEffect.new(Combatant.Stat.ATTACK, -2)], [ModifyStatEffect.new(Combatant.Stat.ATTACK, 2)], [], []
+		))
+		enemy_attack_debuff_action.source = combatant
+		enemy_attack_debuff_action.target = ally_team[0]
+		enemy_attack_debuff_action.effects.append(enemy_attack_debuff_effect)
+		
+		var enemy_skills: Array[Action] = [enemy_damage_action, enemy_heal_action, enemy_attack_buff_action, enemy_attack_debuff_action]
 		actions.append(enemy_skills.pick_random())
 	
 	return actions

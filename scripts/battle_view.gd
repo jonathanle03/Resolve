@@ -1,6 +1,9 @@
 extends Node2D
 
 
+enum Motion { UP, DOWN, ARC }
+
+
 @onready var _ally_node: Node2D = %AllyNode
 @onready var _enemy_node: Node2D = %EnemyNode
 
@@ -19,29 +22,51 @@ func setup(allies: Array[Combatant], enemies: Array[Combatant]) -> void:
 
 func present(results: Array[Result]) -> void:
 	for result in results:
+		var target := result.target
+		
 		match result.kind:
 			Result.ResultKind.DAMAGE:
 				var source := result.source
-				var target := result.target
 				
 				if source:
 					await attack_animation(combatant_node_map[source], combatant_node_map[target])
 				
 				attacked_animation(combatant_node_map[target])
 				combatant_node_map[target].get_node("ProgressBar").value = result.health_after
-				await create_damage_number(combatant_node_map[target], result.amount)
+				await create_floating_text(combatant_node_map[target], str(max(floori(result.amount), 1)), Color.RED, Motion.UP)
 				
 				if source:
 					await fallback_animation(combatant_node_map[source], combatant_node_map[target])
 				
 			Result.ResultKind.HEAL:
-				var target := result.target
 				combatant_node_map[target].get_node("ProgressBar").value = result.health_after
+				await create_floating_text(combatant_node_map[target], str(max(floori(result.amount), 1)), Color.GREEN, Motion.UP)
 				
 			Result.ResultKind.STATUS_APPLIED:
-				pass
+				var text: String
+				var color: Color
+				var motion: Motion
+				
+				if result.status.category == StatusEffect.Category.BUFF:
+					text = "▲"
+					color = Color.ORANGE
+					motion = Motion.UP
+				elif result.status.category == StatusEffect.Category.DEBUFF:
+					text = "▼"
+					color = Color.NAVY_BLUE
+					motion = Motion.DOWN
+				else:
+					text = "■"
+					color = Color.GRAY
+					motion = Motion.ARC
+				
+				await create_floating_text(combatant_node_map[target], text, color, motion)
+			
 			Result.ResultKind.DEATH:
-				pass
+				var tween := create_tween()
+				tween.tween_property(combatant_node_map[target], "modulate:a", 0, 1.0)
+				await tween.finished
+			
 			_:
 				pass
 
@@ -62,10 +87,11 @@ func attack_animation(source: Node2D, target: Node2D) -> void:
 
 
 func attacked_animation(target: Node2D) -> void:
+	var sprite: Sprite2D = target.get_node("Sprite2D")
 	var tween := create_tween()
-	tween.tween_property(target, "position:x", -10.0, 0.05).as_relative()
-	tween.tween_property(target, "position:x", 20.0, 0.1).as_relative()
-	tween.tween_property(target, "position:x", -10.0, 0.05).as_relative()
+	tween.tween_property(sprite, "position:x", -10.0, 0.05).as_relative()
+	tween.tween_property(sprite, "position:x", 20.0, 0.1).as_relative()
+	tween.tween_property(sprite, "position:x", -10.0, 0.05).as_relative()
 	
 	await tween.finished
 
@@ -75,20 +101,36 @@ func fallback_animation(source: Node2D, target: Node2D) -> void:
 	var direction := -1.0 if target.global_position.x > source.global_position.x else 1.0
 	
 	var tween := create_tween()
-	tween.tween_property(source, "position:x", 100.0 * direction, 0.5).as_relative()
+	tween.tween_property(source, "position:x", 100.0 * direction, 0.4).as_relative()
 	
 	await tween.finished
 
 
-func create_damage_number(target: Node2D, amount: float) -> void:
-	var damage_label := Label.new()
-	add_child(damage_label)	
-	damage_label.text = str(floori(amount))
-	damage_label.global_position = target.global_position
+func create_floating_text(target: Node2D, text: String, color: Color, motion: Motion) -> void:
+	var label := Label.new()
+	add_child(label)	
+	label.text = text
+	label.global_position = target.global_position
+	label.modulate = color
 	
-	var damage_label_tween := create_tween()
-	damage_label_tween.tween_property(damage_label, "position:y", -100.0, 0.5).as_relative()
-	damage_label_tween.parallel().tween_property(damage_label, "modulate:a", 0.0, 0.5)
-	damage_label_tween.finished.connect(damage_label.queue_free)
-	
-	await damage_label_tween.finished
+	var label_tween := create_tween()
+	match motion:
+		Motion.UP:
+			label.global_position.y += 20.0
+			label_tween.tween_property(label, "position:y", -50.0, 0.3).as_relative()
+		
+		Motion.DOWN:
+			label.global_position.y -= 40.0
+			label_tween.tween_property(label, "position:y", 50.0, 0.3).as_relative()
+		
+		Motion.ARC:
+			var start_position = label.global_position
+			label_tween.tween_method(
+				func (t: float) -> void:
+					label.position.y = start_position.y - 40.0 * 2 * t * (1 - t)
+			, 0.0, 1.0, 0.3
+			)
+		
+	label_tween.tween_property(label, "modulate:a", 0.0, 0.3)
+	label_tween.finished.connect(label.queue_free)
+	await label_tween.finished
