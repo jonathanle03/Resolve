@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Skill" format=3 uid="uid://ckaxnu7sig8kr"]
+
+[ext_resource type="Script" uid="uid://b2p5oc64vvhud" path="res://scripts/effect.gd" id="1_a1sr4"]
+[ext_resource type="Script" uid="uid://cvgukephrkf02" path="res://scripts/heal_effect.gd" id="2_hm4wd"]
+[ext_resource type="Script" uid="uid://dua2xmaf6ki56" path="res://scripts/skill.gd" id="3_7iq2b"]
+
+[sub_resource type="Resource" id="Resource_ur8ow"]
+script = ExtResource("2_hm4wd")
+amount = 2.0
+metadata/_custom_type_script = "uid://cvgukephrkf02"
+
+[resource]
+script = ExtResource("3_7iq2b")
+name = "Self Heal"
+effects = Array[ExtResource("1_a1sr4")]([SubResource("Resource_ur8ow")])
+metadata/_custom_type_script = "uid://dua2xmaf6ki56"

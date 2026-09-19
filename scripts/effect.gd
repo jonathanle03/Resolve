@@ -1,5 +1,5 @@
 class_name Effect
-extends RefCounted
+extends Resource
 
 
 func apply(source: Combatant, target: Combatant) -> Array[Result]:

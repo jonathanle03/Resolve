@@ -2,11 +2,7 @@ class_name DamageEffect
 extends Effect
 
 
-var amount: float
-
-
-func _init(amount: float) -> void:
-	self.amount = amount
+@export var amount: float = 0.0
 
 
 func apply(source: Combatant, target: Combatant) -> Array[Result]:

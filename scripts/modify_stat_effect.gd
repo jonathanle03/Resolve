@@ -2,13 +2,8 @@ class_name ModifyStatEffect
 extends Effect
 
 
-var stat: Combatant.Stat
-var amount: float
-
-
-func _init(stat: Combatant.Stat, amount: float) -> void:
-	self.stat = stat
-	self.amount = amount
+@export var stat: Combatant.Stat = Combatant.Stat.ATTACK
+@export var amount: float = 0.0
 	
 
 func apply(source: Combatant, target: Combatant) -> Array[Result]:

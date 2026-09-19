@@ -1,25 +1,16 @@
 class_name StatusEffect
-extends RefCounted
+extends Resource
 
 
 enum Category { NEUTRAL, BUFF, DEBUFF }
 
 
-var duration: int
-var category: Category
-var on_apply_effects: Array[Effect]
-var on_remove_effects: Array[Effect]
-var on_turn_start_effects: Array[Effect]
-var on_turn_end_effects: Array[Effect]
-
-
-func _init(duration: int, category: Category, on_apply_effects: Array[Effect], on_remove_effects: Array[Effect], on_turn_start_effects: Array[Effect], on_turn_end_effects: Array[Effect]) -> void:
-	self.duration = duration
-	self.category = category
-	self.on_apply_effects = on_apply_effects
-	self.on_remove_effects = on_remove_effects
-	self.on_turn_start_effects = on_turn_start_effects
-	self.on_turn_end_effects = on_turn_end_effects
+@export var duration: int
+@export var category: Category
+@export var on_apply_effects: Array[Effect]
+@export var on_remove_effects: Array[Effect]
+@export var on_turn_start_effects: Array[Effect]
+@export var on_turn_end_effects: Array[Effect]
 
 
 func on_apply(target: Combatant) -> Array[Result]:
@@ -51,5 +42,11 @@ func on_turn_end(target: Combatant) -> Array[Result]:
 
 
 func clone() -> StatusEffect:
-	var status := StatusEffect.new(duration, category, on_apply_effects, on_remove_effects, on_turn_start_effects, on_turn_end_effects)
+	var status := StatusEffect.new()
+	status.duration = duration
+	status.category = category
+	status.on_apply_effects = on_apply_effects
+	status.on_remove_effects = on_remove_effects
+	status.on_turn_start_effects = on_turn_start_effects
+	status.on_turn_end_effects = on_turn_end_effects
 	return status

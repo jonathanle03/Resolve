@@ -2,11 +2,7 @@ class_name ApplyStatusEffect
 extends Effect
 
 
-var status: StatusEffect
-
-
-func _init(status: StatusEffect) -> void:
-	self.status = status
+@export var status: StatusEffect = null
 
 
 func apply(source: Combatant, target: Combatant) -> Array[Result]:
