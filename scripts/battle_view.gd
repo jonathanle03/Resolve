@@ -1,11 +1,15 @@
 extends Node2D
 
 
+signal skill_chosen(skill: Skill)
+
+
 enum Motion { UP, DOWN, ARC }
 
 
 @onready var _ally_node: Node2D = %AllyNode
 @onready var _enemy_node: Node2D = %EnemyNode
+@onready var _v_box_container: VBoxContainer = %VBoxContainer
 
 
 var combatant_node_map: Dictionary[Combatant, Node2D] = {}
@@ -134,3 +138,20 @@ func create_floating_text(target: Node2D, text: String, color: Color, motion: Mo
 	label_tween.tween_property(label, "modulate:a", 0.0, 0.3)
 	label_tween.finished.connect(label.queue_free)
 	await label_tween.finished
+
+
+func show_skill_menu(skills: Array[Skill]) -> void:
+	for skill in skills:
+		var button := Button.new()
+		button.text = skill.name
+		button.pressed.connect(skill_chosen.emit.bind(skill))
+		_v_box_container.add_child(button)
+	
+	_v_box_container.visible = true
+
+
+func hide_skill_menu() -> void:
+	for button in _v_box_container.get_children():
+		_v_box_container.remove_child(button)
+		button.queue_free()
+	_v_box_container.visible = false

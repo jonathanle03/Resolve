@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="CombatantDef" format=3 uid="uid://c4pn2wleqr1c1"]
+
+[ext_resource type="Script" uid="uid://b7rj3ty5ylpu2" path="res://scripts/combatant_def.gd" id="1_b0tfu"]
+[ext_resource type="Script" uid="uid://dua2xmaf6ki56" path="res://scripts/skill.gd" id="2_1xfer"]
+[ext_resource type="Resource" uid="uid://ibnd6guue0lq" path="res://resources/basic_attack.tres" id="3_h0xgo"]
+[ext_resource type="Resource" uid="uid://cwqjxm13sqix8" path="res://resources/poison_strike.tres" id="4_vk1uh"]
+[ext_resource type="Resource" uid="uid://ckaxnu7sig8kr" path="res://resources/self_heal.tres" id="5_1e82u"]
+[ext_resource type="Resource" uid="uid://buwgtht7mud10" path="res://resources/buff_attack.tres" id="6_4qylf"]
+[ext_resource type="Resource" uid="uid://c1av2su34408v" path="res://resources/debuff_attack.tres" id="7_vdr6p"]
+
+[resource]
+script = ExtResource("1_b0tfu")
+name = "Party Member 1"
+max_health = 100.0
+attack = 5.0
+skills = Array[ExtResource("2_1xfer")]([ExtResource("3_h0xgo"), ExtResource("4_vk1uh"), ExtResource("5_1e82u"), ExtResource("6_4qylf"), ExtResource("7_vdr6p")])
+metadata/_custom_type_script = "uid://b7rj3ty5ylpu2"

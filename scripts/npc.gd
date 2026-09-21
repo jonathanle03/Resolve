@@ -12,8 +12,7 @@ func interact() -> void:
 	await DialogueBox.show_dialogue(dialogue)
 	GameState.overworld_position = global_position
 	
-	# TODO: Update when enemy resources are implemented
-	var enemy := {"name": "Enemy", "max_health": 50.0, "attack": 4.0}
+	var enemy: CombatantDef = load("uid://du8a7ig01d1l5")
 	GameState.enemies = [enemy]
 	
 	get_tree().change_scene_to_file("uid://dsh8y6ogu1sfl")
