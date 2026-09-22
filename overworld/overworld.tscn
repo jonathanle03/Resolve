@@ -1,8 +1,8 @@
 [gd_scene format=4 uid="uid://br1ry85r6s0ql"]
 
 [ext_resource type="Texture2D" uid="uid://cxduie4absix4" path="res://assets/tilemap_packed.png" id="1_m1b5j"]
-[ext_resource type="PackedScene" uid="uid://bpn65tvu1pq6p" path="res://scenes/player.tscn" id="2_16ktt"]
-[ext_resource type="PackedScene" uid="uid://8hboctqavbpv" path="res://scenes/npc.tscn" id="3_u2ss0"]
+[ext_resource type="PackedScene" uid="uid://bpn65tvu1pq6p" path="res://overworld/player.tscn" id="2_16ktt"]
+[ext_resource type="PackedScene" uid="uid://8hboctqavbpv" path="res://overworld/npc.tscn" id="3_u2ss0"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_16ktt"]
 texture = ExtResource("1_m1b5j")

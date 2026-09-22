@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bpn65tvu1pq6p"]
 
-[ext_resource type="Script" uid="uid://6guu5kj1edyk" path="res://scripts/player.gd" id="1_g2els"]
+[ext_resource type="Script" uid="uid://6guu5kj1edyk" path="res://overworld/player.gd" id="1_g2els"]
 [ext_resource type="Texture2D" uid="uid://cn7q2lnqqy7bw" path="res://assets/tile_0112.png" id="2_g2els"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_18jcc"]

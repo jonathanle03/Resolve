@@ -1,15 +1,15 @@
-[gd_scene format=3 uid="uid://dix75hobg1j0r"]
+[gd_scene format=3 uid="uid://chn2oyk85qt5m"]
 
-[ext_resource type="Script" uid="uid://cqjyf4b51ppha" path="res://scripts/title_screen.gd" id="1_fgkus"]
+[ext_resource type="Script" uid="uid://cldr2o8ulh7ma" path="res://ui/game_over_screen.gd" id="1_iwahs"]
 
-[node name="TitleScreen" type="Control" unique_id=690761490]
+[node name="GameOverScreen" type="Control" unique_id=690761490]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_fgkus")
+script = ExtResource("1_iwahs")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=932829986]
 layout_mode = 1
@@ -37,13 +37,18 @@ theme_override_constants/separation = 50
 [node name="Label" type="Label" parent="ColorRect/VBoxContainer" unique_id=272030956]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-text = "Resolve"
+text = "Game Over"
 horizontal_alignment = 1
 
 [node name="ButtonsContainer" type="VBoxContainer" parent="ColorRect/VBoxContainer" unique_id=957015006]
 layout_mode = 2
 
-[node name="PlayButton" type="Button" parent="ColorRect/VBoxContainer/ButtonsContainer" unique_id=952140355]
+[node name="RetryBattleButton" type="Button" parent="ColorRect/VBoxContainer/ButtonsContainer" unique_id=952140355]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Play"
+text = "Retry Battle"
+
+[node name="ReturnToTitleButton" type="Button" parent="ColorRect/VBoxContainer/ButtonsContainer" unique_id=1386317912]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Return to Title"

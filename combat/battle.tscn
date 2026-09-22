@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://dsh8y6ogu1sfl"]
 
-[ext_resource type="Script" uid="uid://dgj0p46byj4ne" path="res://scripts/battle.gd" id="1_p1qf1"]
-[ext_resource type="Script" uid="uid://135xenhon7r" path="res://scripts/battle_view.gd" id="2_a12nh"]
-[ext_resource type="Texture2D" uid="uid://b7pfyanex8w1u" path="res://icon.svg" id="3_lpir7"]
+[ext_resource type="Script" uid="uid://dgj0p46byj4ne" path="res://combat/battle.gd" id="1_5ssur"]
+[ext_resource type="Script" uid="uid://135xenhon7r" path="res://combat/battle_view.gd" id="2_tjrsf"]
+[ext_resource type="Texture2D" uid="uid://b7pfyanex8w1u" path="res://icon.svg" id="3_8qtj8"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tb63h"]
 bg_color = Color(0.102996826, 0.87890625, 0.13330579, 1)
@@ -11,11 +11,11 @@ bg_color = Color(0.102996826, 0.87890625, 0.13330579, 1)
 bg_color = Color(0.101960786, 0.8784314, 0.13333334, 1)
 
 [node name="Battle" type="Node2D" unique_id=1676052002]
-script = ExtResource("1_p1qf1")
+script = ExtResource("1_5ssur")
 
 [node name="BattleView" type="Node2D" parent="." unique_id=1864577347]
 unique_name_in_owner = true
-script = ExtResource("2_a12nh")
+script = ExtResource("2_tjrsf")
 
 [node name="EnemyNode" type="Node2D" parent="BattleView" unique_id=1220433463]
 unique_name_in_owner = true
@@ -23,7 +23,7 @@ position = Vector2(352, 320)
 
 [node name="Sprite2D" type="Sprite2D" parent="BattleView/EnemyNode" unique_id=1555885263]
 modulate = Color(1, 0.09803922, 0.09803922, 1)
-texture = ExtResource("3_lpir7")
+texture = ExtResource("3_8qtj8")
 
 [node name="ProgressBar" type="ProgressBar" parent="BattleView/EnemyNode" unique_id=280157630]
 offset_left = -128.0
@@ -39,7 +39,7 @@ unique_name_in_owner = true
 position = Vector2(800, 320)
 
 [node name="Sprite2D" type="Sprite2D" parent="BattleView/AllyNode" unique_id=1930298946]
-texture = ExtResource("3_lpir7")
+texture = ExtResource("3_8qtj8")
 
 [node name="ProgressBar" type="ProgressBar" parent="BattleView/AllyNode" unique_id=1604917288]
 offset_left = -128.0

@@ -1,10 +1,10 @@
 [gd_resource type="Resource" script_class="Skill" format=3 uid="uid://cwqjxm13sqix8"]
 
-[ext_resource type="Script" uid="uid://b2p5oc64vvhud" path="res://scripts/effect.gd" id="1_hsrv2"]
-[ext_resource type="Script" uid="uid://dua2xmaf6ki56" path="res://scripts/skill.gd" id="2_04dmf"]
-[ext_resource type="Script" uid="uid://l0nmott8qf82" path="res://scripts/damage_effect.gd" id="2_yry4e"]
-[ext_resource type="Script" uid="uid://d175na7vryfvq" path="res://scripts/apply_status_effect.gd" id="3_jtvrq"]
-[ext_resource type="Resource" uid="uid://cs1pulfescbcw" path="res://resources/poison_status.tres" id="4_6nl3b"]
+[ext_resource type="Script" uid="uid://b2p5oc64vvhud" path="res://combat/effects/effect.gd" id="1_hsrv2"]
+[ext_resource type="Script" uid="uid://dua2xmaf6ki56" path="res://combat/model/skill.gd" id="2_04dmf"]
+[ext_resource type="Script" uid="uid://l0nmott8qf82" path="res://combat/effects/damage_effect.gd" id="2_yry4e"]
+[ext_resource type="Script" uid="uid://d175na7vryfvq" path="res://combat/effects/apply_status_effect.gd" id="3_jtvrq"]
+[ext_resource type="Resource" uid="uid://cs1pulfescbcw" path="res://combat/status_effects/poison_status.tres" id="4_6nl3b"]
 
 [sub_resource type="Resource" id="Resource_yry4e"]
 script = ExtResource("2_yry4e")

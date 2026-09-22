@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="Skill" format=3 uid="uid://ibnd6guue0lq"]
 
-[ext_resource type="Script" uid="uid://b2p5oc64vvhud" path="res://scripts/effect.gd" id="1_fushb"]
-[ext_resource type="Script" uid="uid://l0nmott8qf82" path="res://scripts/damage_effect.gd" id="2_0qolj"]
-[ext_resource type="Script" uid="uid://dua2xmaf6ki56" path="res://scripts/skill.gd" id="2_5616g"]
+[ext_resource type="Script" uid="uid://b2p5oc64vvhud" path="res://combat/effects/effect.gd" id="1_fushb"]
+[ext_resource type="Script" uid="uid://l0nmott8qf82" path="res://combat/effects/damage_effect.gd" id="2_0qolj"]
+[ext_resource type="Script" uid="uid://dua2xmaf6ki56" path="res://combat/model/skill.gd" id="2_5616g"]
 
 [sub_resource type="Resource" id="Resource_0qolj"]
 script = ExtResource("2_0qolj")
