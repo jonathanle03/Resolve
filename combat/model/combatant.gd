@@ -14,11 +14,11 @@ var status_effects: Array[StatusEffect]
 var is_dead: bool
 
 
-func _init(name: String, max_health: float, attack: float) -> void:
-	self.name = name
-	self.max_health = max_health
-	self.current_health = max_health
-	self.attack = attack
+func _init(combatant_name: String, combatant_max_health: float, combatant_attack: float) -> void:
+	name = combatant_name
+	max_health = combatant_max_health
+	current_health = max_health
+	attack = combatant_attack
 	status_effects = []
 	is_dead = false
 

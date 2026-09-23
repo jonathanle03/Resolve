@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cn7q2lnqqy7bw"
-path="res://.godot/imported/tile_0112.png-75897b842db44feb872adccb24e01bd2.ctex"
+uid="uid://c6pji74h2wr6g"
+path="res://.godot/imported/Red_Warrior_Idle.png-2b7ac403c2a789e784332872560e3bd5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tile_0112.png"
-dest_files=["res://.godot/imported/tile_0112.png-75897b842db44feb872adccb24e01bd2.ctex"]
+source_file="res://assets/Red_Warrior_Idle.png"
+dest_files=["res://.godot/imported/Red_Warrior_Idle.png-2b7ac403c2a789e784332872560e3bd5.ctex"]
 
 [params]
 

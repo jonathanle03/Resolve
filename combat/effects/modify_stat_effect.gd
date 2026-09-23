@@ -6,7 +6,7 @@ extends Effect
 @export var amount: float = 0.0
 	
 
-func apply(source: Combatant, target: Combatant) -> Array[Result]:
+func apply(_source: Combatant, target: Combatant) -> Array[Result]:
 	match stat:
 		Combatant.Stat.ATTACK:
 			target.attack += amount

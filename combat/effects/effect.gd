@@ -2,5 +2,5 @@ class_name Effect
 extends Resource
 
 
-func apply(source: Combatant, target: Combatant) -> Array[Result]:
+func apply(_source: Combatant, _target: Combatant) -> Array[Result]:
 	return []

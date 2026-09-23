@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 
+@onready var _animated_sprite_2d: AnimatedSprite2D = %AnimatedSprite2D
 @onready var _area_2d: Area2D = %Area2D
 
 
@@ -16,7 +17,20 @@ func _ready() -> void:
 	_area_2d.body_exited.connect(_on_area_2d_body_exited)
 
 
-func _physics_process(delta: float) -> void:
+func _process(_delta: float) -> void:
+	if Input.is_action_pressed("move_right"):
+		_animated_sprite_2d.flip_h = false
+	elif Input.is_action_pressed("move_left"):
+		_animated_sprite_2d.flip_h = true
+	
+	var direction := Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	if direction != Vector2.ZERO:
+		_animated_sprite_2d.play("run")
+	else:
+		_animated_sprite_2d.play("idle")
+
+
+func _physics_process(_delta: float) -> void:
 	if DialogueBox.is_active:
 		velocity = Vector2.ZERO
 		move_and_slide()
