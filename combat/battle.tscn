@@ -4,11 +4,19 @@
 [ext_resource type="Script" uid="uid://135xenhon7r" path="res://combat/battle_view.gd" id="2_tjrsf"]
 [ext_resource type="Texture2D" uid="uid://b7pfyanex8w1u" path="res://icon.svg" id="3_8qtj8"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tb63h"]
-bg_color = Color(0.102996826, 0.87890625, 0.13330579, 1)
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u042n"]
 bg_color = Color(0.101960786, 0.8784314, 0.13333334, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5ssur"]
+bg_color = Color(0.10196076, 0.7692402, 0.8784314, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [node name="Battle" type="Node2D" unique_id=1676052002]
 script = ExtResource("1_5ssur")
@@ -25,12 +33,22 @@ position = Vector2(352, 320)
 modulate = Color(1, 0.09803922, 0.09803922, 1)
 texture = ExtResource("3_8qtj8")
 
-[node name="ProgressBar" type="ProgressBar" parent="BattleView/EnemyNode" unique_id=280157630]
+[node name="HealthBar" type="ProgressBar" parent="BattleView/EnemyNode" unique_id=192212312]
 offset_left = -128.0
-offset_top = -96.0
+offset_top = -117.0
 offset_right = 128.0
-offset_bottom = -69.0
-theme_override_styles/fill = SubResource("StyleBoxFlat_tb63h")
+offset_bottom = -90.0
+theme_override_styles/fill = SubResource("StyleBoxFlat_u042n")
+value = 50.0
+show_percentage = false
+
+[node name="ManaBar" type="ProgressBar" parent="BattleView/EnemyNode" unique_id=1322062331]
+offset_left = -128.0
+offset_top = -90.0
+offset_right = 128.0
+offset_bottom = -63.0
+scale = Vector2(0.997861, 0.62064385)
+theme_override_styles/fill = SubResource("StyleBoxFlat_5ssur")
 value = 50.0
 show_percentage = false
 
@@ -41,12 +59,22 @@ position = Vector2(800, 320)
 [node name="Sprite2D" type="Sprite2D" parent="BattleView/AllyNode" unique_id=1930298946]
 texture = ExtResource("3_8qtj8")
 
-[node name="ProgressBar" type="ProgressBar" parent="BattleView/AllyNode" unique_id=1604917288]
+[node name="HealthBar" type="ProgressBar" parent="BattleView/AllyNode" unique_id=1604917288]
 offset_left = -128.0
-offset_top = -96.0
+offset_top = -117.0
 offset_right = 128.0
-offset_bottom = -69.0
+offset_bottom = -90.0
 theme_override_styles/fill = SubResource("StyleBoxFlat_u042n")
+value = 50.0
+show_percentage = false
+
+[node name="ManaBar" type="ProgressBar" parent="BattleView/AllyNode" unique_id=1865951363]
+offset_left = -128.0
+offset_top = -90.0
+offset_right = 128.0
+offset_bottom = -63.0
+scale = Vector2(0.997861, 0.62064385)
+theme_override_styles/fill = SubResource("StyleBoxFlat_5ssur")
 value = 50.0
 show_percentage = false
 
@@ -54,8 +82,7 @@ show_percentage = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="BattleView/CanvasLayer" unique_id=417526273]
 unique_name_in_owner = true
-visible = false
-offset_left = 736.0
+offset_left = 691.0
 offset_top = 416.0
-offset_right = 845.0
+offset_right = 908.0
 offset_bottom = 482.0

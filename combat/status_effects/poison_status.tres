@@ -11,6 +11,7 @@ metadata/_custom_type_script = "uid://l0nmott8qf82"
 
 [resource]
 script = ExtResource("2_h70yf")
+name = "Poison"
 duration = 3
 on_turn_end_effects = Array[ExtResource("1_tlo4q")]([SubResource("Resource_unuvj")])
 metadata/_custom_type_script = "uid://bcolho4n5g53b"

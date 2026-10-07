@@ -12,6 +12,8 @@
 script = ExtResource("1_b0tfu")
 name = "Party Member 1"
 max_health = 100.0
+max_mana = 20.0
 attack = 5.0
-skills = Array[ExtResource("2_1xfer")]([ExtResource("3_h0xgo"), ExtResource("4_vk1uh"), ExtResource("5_1e82u"), ExtResource("6_4qylf"), ExtResource("7_vdr6p")])
+basic_attack = ExtResource("3_h0xgo")
+skills = Array[ExtResource("2_1xfer")]([ExtResource("4_vk1uh"), ExtResource("5_1e82u"), ExtResource("6_4qylf"), ExtResource("7_vdr6p")])
 metadata/_custom_type_script = "uid://b7rj3ty5ylpu2"

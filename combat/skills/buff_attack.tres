@@ -13,5 +13,6 @@ metadata/_custom_type_script = "uid://d175na7vryfvq"
 [resource]
 script = ExtResource("4_anmtd")
 name = "Buff Attack"
+mana_cost = 4.0
 effects = Array[ExtResource("1_0qgk0")]([SubResource("Resource_4mbnv")])
 metadata/_custom_type_script = "uid://dua2xmaf6ki56"

@@ -62,7 +62,7 @@ func advance() -> void:
 			
 			BattleStates.SELECT:
 				if is_player_turn and chosen_skill == null:
-					_battle_view.show_skill_menu(current_combatant.skills)
+					_battle_view.show_battle_menu(current_combatant)
 					break
 				
 				actions = _select_actions(current_combatant)
@@ -86,6 +86,7 @@ func advance() -> void:
 			BattleStates.VICTORY:
 				for party_member in GameState.party_members:
 					party_member.current_health = party_member_map[party_member].current_health
+					party_member.current_mana = party_member_map[party_member].current_mana
 				GameState.returning_from_battle = true
 				get_tree().change_scene_to_file("uid://mtwtyjlq7lkx")
 				
@@ -121,15 +122,22 @@ func _select_actions(combatant: Combatant) -> Array[Action]:
 		var ally_action := Action.new()
 		ally_action.source = combatant
 		ally_action.target = _get_target(chosen_skill, combatant, ally_team, enemy_team)
+		ally_action.mana_cost = chosen_skill.mana_cost
 		ally_action.effects = chosen_skill.effects
 		actions.append(ally_action)
 		chosen_skill = null
 	
 	if combatant in enemy_team:
-		var random_skill: Skill = combatant.skills.pick_random()
+		var valid_skills: Array[Skill] = [combatant.basic_attack]
+		for skill in combatant.skills:
+			if combatant.current_mana >= skill.mana_cost:
+				valid_skills.append(skill)
+		
+		var random_skill: Skill = valid_skills.pick_random()
 		var enemy_action := Action.new()
 		enemy_action.source = combatant
 		enemy_action.target = _get_target(random_skill, combatant, enemy_team, ally_team)
+		enemy_action.mana_cost = random_skill.mana_cost
 		enemy_action.effects = random_skill.effects
 		actions.append(enemy_action)
 	
@@ -138,13 +146,31 @@ func _select_actions(combatant: Combatant) -> Array[Action]:
 
 func _present(results: Array[Result]) -> void:
 	for result in results:
-		prints(
-			result.source.name if result.source else null,
-			result.target.name if result.target else null,
-			Result.ResultKind.keys()[result.kind],
-			result.amount,
-			result.health_after
-		)
+		if result.source:
+			match (result.kind):
+				Result.ResultKind.DAMAGE:
+					print("%s attacks %s for %.1f damage." % [result.source.name, result.target.name, result.amount])
+				Result.ResultKind.HEAL:
+					print("%s heals %s for %.1f health." % [result.source.name, result.target.name, result.amount])
+				Result.ResultKind.STATUS_APPLIED:
+					print("%s applies %s to %s." % [result.source.name, result.status.name, result.target.name])
+		else:
+			match (result.kind):
+				Result.ResultKind.DAMAGE:
+					print("%s takes %.1f damage." % [result.target.name, result.amount])
+				Result.ResultKind.HEAL:
+					print("%s heals for %.1f health." % [result.target.name, result.amount])
+				Result.ResultKind.STATUS_APPLIED:
+					print("%s is applied to %s." % [result.status.name, result.target.name])
+				Result.ResultKind.DEATH:
+					print("%s died." % [result.target.name])
+	
+	print()
+	for combatant in ally_team:
+		print("%s %.1f / %.1f HP  %.1f / %.1f MP" % [combatant.name, combatant.current_health, combatant.max_health, combatant.current_mana, combatant.max_mana])
+	for combatant in enemy_team:
+		print("%s %.1f / %.1f HP  %.1f / %.1f MP" % [combatant.name, combatant.current_health, combatant.max_health, combatant.current_mana, combatant.max_mana])
+	print()
 	
 	await _battle_view.present(results)
 
@@ -179,11 +205,11 @@ func _get_target(skill: Skill, source: Combatant, allies: Array[Combatant], enem
 		Skill.TargetType.ENEMY:
 			target = enemies[0]
 		_:
-			target = source
+			push_error("Not a valid target type")
 	return target
 
 
 func _on_skill_chosen(skill: Skill) -> void:
-	_battle_view.hide_skill_menu()
+	_battle_view.hide_battle_menu()
 	chosen_skill = skill
 	advance()

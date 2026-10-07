@@ -16,6 +16,7 @@ metadata/_custom_type_script = "uid://cbkfqg1c0hku0"
 
 [resource]
 script = ExtResource("2_cweom")
+name = "Attack Debuff"
 duration = 3
 category = 2
 on_apply_effects = Array[ExtResource("1_hrf1g")]([SubResource("Resource_tipkt")])

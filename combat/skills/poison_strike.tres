@@ -19,6 +19,7 @@ metadata/_custom_type_script = "uid://d175na7vryfvq"
 [resource]
 script = ExtResource("2_04dmf")
 name = "Poison Strike"
+mana_cost = 5.0
 effects = Array[ExtResource("1_hsrv2")]([SubResource("Resource_yry4e"), SubResource("Resource_xbvhe")])
 target_type = 1
 metadata/_custom_type_script = "uid://dua2xmaf6ki56"

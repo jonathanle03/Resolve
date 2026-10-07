@@ -24,6 +24,15 @@ static func resolve(actions: Array[Action]) -> Array[Result]:
 		
 		var prev_target_is_dead := action.target.is_dead
 		
+		# Remove Mana
+		if action.mana_cost:
+			var mana_res := Result.new()
+			mana_res.target = action.source
+			mana_res.kind = Result.ResultKind.MANA_CHANGED
+			action.source.current_mana -= action.mana_cost
+			mana_res.mana_after = action.source.current_mana
+			results.append(mana_res)
+		
 		# Perform Action
 		for effect in action.effects:
 			var res := effect.apply(action.source, action.target)

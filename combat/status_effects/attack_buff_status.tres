@@ -16,6 +16,7 @@ metadata/_custom_type_script = "uid://cbkfqg1c0hku0"
 
 [resource]
 script = ExtResource("2_r2nkp")
+name = "Attack Buff"
 duration = 3
 category = 1
 on_apply_effects = Array[ExtResource("1_7nf1r")]([SubResource("Resource_wnvqj")])

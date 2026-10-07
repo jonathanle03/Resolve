@@ -12,5 +12,6 @@ metadata/_custom_type_script = "uid://cvgukephrkf02"
 [resource]
 script = ExtResource("3_7iq2b")
 name = "Self Heal"
+mana_cost = 4.0
 effects = Array[ExtResource("1_a1sr4")]([SubResource("Resource_ur8ow")])
 metadata/_custom_type_script = "uid://dua2xmaf6ki56"

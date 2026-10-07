@@ -13,6 +13,7 @@ metadata/_custom_type_script = "uid://d175na7vryfvq"
 [resource]
 script = ExtResource("2_2proa")
 name = "Debuff Attack"
+mana_cost = 6.0
 effects = Array[ExtResource("1_iay0j")]([SubResource("Resource_kfjp7")])
 target_type = 1
 metadata/_custom_type_script = "uid://dua2xmaf6ki56"

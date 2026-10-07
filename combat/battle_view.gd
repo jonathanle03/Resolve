@@ -12,39 +12,46 @@ enum Motion { UP, DOWN, ARC }
 @onready var _v_box_container: VBoxContainer = %VBoxContainer
 
 
+const BATTLE_BUTTON := preload("uid://lmeawgpaf568")
+
+
 var combatant_node_map: Dictionary[Combatant, Node2D] = {}
 
 
 func setup(allies: Array[Combatant], enemies: Array[Combatant]) -> void:
 	combatant_node_map[allies[0]] = _ally_node
-	_ally_node.get_node("ProgressBar").max_value = allies[0].max_health
-	_ally_node.get_node("ProgressBar").value = allies[0].current_health
+	_ally_node.get_node("HealthBar").max_value = allies[0].max_health
+	_ally_node.get_node("HealthBar").value = allies[0].current_health
+	_ally_node.get_node("ManaBar").max_value = allies[0].max_mana
+	_ally_node.get_node("ManaBar").value = allies[0].current_mana
+	
 	combatant_node_map[enemies[0]] = _enemy_node
-	_enemy_node.get_node("ProgressBar").max_value = enemies[0].max_health
-	_enemy_node.get_node("ProgressBar").value = enemies[0].current_health
+	_enemy_node.get_node("HealthBar").max_value = enemies[0].max_health
+	_enemy_node.get_node("HealthBar").value = enemies[0].current_health
+	_enemy_node.get_node("ManaBar").max_value = enemies[0].max_mana
+	_enemy_node.get_node("ManaBar").value = enemies[0].current_mana
 
 
 func present(results: Array[Result]) -> void:
 	for result in results:
+		var source := result.source
 		var target := result.target
 		
 		match result.kind:
 			Result.ResultKind.DAMAGE:
-				var source := result.source
-				
 				if source:
 					await attack_animation(combatant_node_map[source], combatant_node_map[target])
 				
 				attacked_animation(combatant_node_map[target])
-				combatant_node_map[target].get_node("ProgressBar").value = result.health_after
-				await create_floating_text(combatant_node_map[target], str(max(floori(result.amount), 1)), Color.RED, Motion.UP)
+				combatant_node_map[target].get_node("HealthBar").value = result.health_after
+				await create_floating_text(combatant_node_map[target], str(result.amount), Color.RED, Motion.UP)
 				
 				if source:
 					await fallback_animation(combatant_node_map[source], combatant_node_map[target])
 				
 			Result.ResultKind.HEAL:
-				combatant_node_map[target].get_node("ProgressBar").value = result.health_after
-				await create_floating_text(combatant_node_map[target], str(max(floori(result.amount), 1)), Color.GREEN, Motion.UP)
+				combatant_node_map[target].get_node("HealthBar").value = result.health_after
+				await create_floating_text(combatant_node_map[target], str(result.amount), Color.GREEN, Motion.UP)
 				
 			Result.ResultKind.STATUS_APPLIED:
 				var text: String
@@ -70,6 +77,9 @@ func present(results: Array[Result]) -> void:
 				var tween := create_tween()
 				tween.tween_property(combatant_node_map[target], "modulate:a", 0, 1.0)
 				await tween.finished
+			
+			Result.ResultKind.MANA_CHANGED:
+				combatant_node_map[target].get_node("ManaBar").value = result.mana_after
 			
 			_:
 				pass
@@ -121,11 +131,11 @@ func create_floating_text(target: Node2D, text: String, color: Color, motion: Mo
 	match motion:
 		Motion.UP:
 			label.global_position.y += 20.0
-			label_tween.tween_property(label, "position:y", -50.0, 0.3).as_relative()
+			label_tween.tween_property(label, "global_position:y", -50.0, 0.3).as_relative()
 		
 		Motion.DOWN:
 			label.global_position.y -= 40.0
-			label_tween.tween_property(label, "position:y", 50.0, 0.3).as_relative()
+			label_tween.tween_property(label, "global_position:y", 50.0, 0.3).as_relative()
 		
 		Motion.ARC:
 			var start_position = label.global_position
@@ -140,17 +150,53 @@ func create_floating_text(target: Node2D, text: String, color: Color, motion: Mo
 	await label_tween.finished
 
 
-func show_skill_menu(skills: Array[Skill]) -> void:
-	for skill in skills:
-		var button := Button.new()
-		button.text = skill.name
-		button.pressed.connect(skill_chosen.emit.bind(skill))
-		_v_box_container.add_child(button)
+func show_battle_menu(combatant: Combatant) -> void:
+	var attack_button: BattleButton = BATTLE_BUTTON.instantiate()
+	_v_box_container.add_child(attack_button)
+	
+	attack_button.set_labels("Attack", "")
+	attack_button.set_binding(skill_chosen.emit.bind(combatant.basic_attack))
+	
+	var skills_button: BattleButton = BATTLE_BUTTON.instantiate()
+	_v_box_container.add_child(skills_button)
+	
+	skills_button.set_labels("Skills", "")
+	skills_button.set_binding(
+		func():
+			hide_battle_menu()
+			show_skill_menu(combatant)
+	)
 	
 	_v_box_container.visible = true
 
 
-func hide_skill_menu() -> void:
+func show_skill_menu(combatant: Combatant) -> void:
+	var skills := combatant.skills
+	
+	for skill in skills:
+		var skill_button: BattleButton = BATTLE_BUTTON.instantiate()
+		_v_box_container.add_child(skill_button)
+		
+		skill_button.set_labels(skill.name, "%.1f" % skill.mana_cost)
+		skill_button.set_binding(skill_chosen.emit.bind(skill))
+		
+		if combatant.current_mana < skill.mana_cost:
+			skill_button.disable_button()
+	
+	var back_button: BattleButton = BATTLE_BUTTON.instantiate()
+	_v_box_container.add_child(back_button)
+	
+	back_button.set_labels("Back", "")
+	back_button.set_binding(
+		func():
+			hide_battle_menu()
+			show_battle_menu(combatant)
+	)
+	
+	_v_box_container.visible = true
+
+
+func hide_battle_menu() -> void:
 	for button in _v_box_container.get_children():
 		_v_box_container.remove_child(button)
 		button.queue_free()

@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://lmeawgpaf568"]
+
+[ext_resource type="Script" uid="uid://uttt78u30471" path="res://combat/battle_button.gd" id="1_oq6w3"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_18jcc"]
+
+[node name="BattleButton" type="PanelContainer" unique_id=68684278]
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_18jcc")
+script = ExtResource("1_oq6w3")
+
+[node name="Button" type="Button" parent="." unique_id=579841936]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=835388888]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=1022259794]
+layout_mode = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="SkillNameLabel" type="Label" parent="MarginContainer/HBoxContainer" unique_id=107099166]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Poison Strike"
+
+[node name="Spacer" type="Control" parent="MarginContainer/HBoxContainer" unique_id=1254266068]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="ManaCostLabel" type="Label" parent="MarginContainer/HBoxContainer" unique_id=420770338]
+unique_name_in_owner = true
+layout_mode = 2
+text = "5"

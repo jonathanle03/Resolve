@@ -5,6 +5,7 @@ extends Resource
 enum Category { NEUTRAL, BUFF, DEBUFF }
 
 
+@export var name: String
 @export var duration: int
 @export var category: Category
 @export var on_apply_effects: Array[Effect]
@@ -42,11 +43,4 @@ func on_turn_end(target: Combatant) -> Array[Result]:
 
 
 func clone() -> StatusEffect:
-	var status := StatusEffect.new()
-	status.duration = duration
-	status.category = category
-	status.on_apply_effects = on_apply_effects
-	status.on_remove_effects = on_remove_effects
-	status.on_turn_start_effects = on_turn_start_effects
-	status.on_turn_end_effects = on_turn_end_effects
-	return status
+	return duplicate()
