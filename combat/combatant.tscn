@@ -1,0 +1,112 @@
+[gd_scene format=3 uid="uid://s15n5wdul107"]
+
+[ext_resource type="Script" uid="uid://cpbqvqdl3vchw" path="res://combat/combatant_view.gd" id="1_3susy"]
+[ext_resource type="Texture2D" uid="uid://bj3u23elt8iot" path="res://assets/Blue_Warrior_Idle.png" id="2_3susy"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qf25c"]
+atlas = ExtResource("2_3susy")
+region = Rect2(0, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ddop6"]
+atlas = ExtResource("2_3susy")
+region = Rect2(192, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q2us4"]
+atlas = ExtResource("2_3susy")
+region = Rect2(384, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xsoec"]
+atlas = ExtResource("2_3susy")
+region = Rect2(576, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qtpat"]
+atlas = ExtResource("2_3susy")
+region = Rect2(768, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uxhds"]
+atlas = ExtResource("2_3susy")
+region = Rect2(960, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r4its"]
+atlas = ExtResource("2_3susy")
+region = Rect2(1152, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_krt6n"]
+atlas = ExtResource("2_3susy")
+region = Rect2(1344, 0, 192, 192)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_18jcc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qf25c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ddop6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q2us4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xsoec")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qtpat")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uxhds")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r4its")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_krt6n")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 10.0
+}]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3susy"]
+bg_color = Color(0.101960786, 0.8784314, 0.13333334, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qf25c"]
+bg_color = Color(0.10196076, 0.7692402, 0.8784314, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="Combatant" type="Node2D" unique_id=748099328]
+script = ExtResource("1_3susy")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=862745810]
+unique_name_in_owner = true
+sprite_frames = SubResource("SpriteFrames_18jcc")
+autoplay = "default"
+frame_progress = 0.59563226
+
+[node name="HealthBar" type="ProgressBar" parent="." unique_id=798772437]
+unique_name_in_owner = true
+offset_left = -128.0
+offset_top = -117.0
+offset_right = 128.0
+offset_bottom = -90.0
+theme_override_styles/fill = SubResource("StyleBoxFlat_3susy")
+value = 50.0
+show_percentage = false
+
+[node name="ManaBar" type="ProgressBar" parent="." unique_id=371804166]
+unique_name_in_owner = true
+offset_left = -128.0
+offset_top = -90.0
+offset_right = 128.0
+offset_bottom = -63.0
+scale = Vector2(0.997861, 0.62064385)
+theme_override_styles/fill = SubResource("StyleBoxFlat_qf25c")
+value = 50.0
+show_percentage = false

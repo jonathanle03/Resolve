@@ -1,3 +1,4 @@
+class_name BattleView
 extends Node2D
 
 
@@ -12,24 +13,46 @@ enum Motion { UP, DOWN, ARC }
 @onready var _v_box_container: VBoxContainer = %VBoxContainer
 
 
+@onready var _enemy_1_marker: Marker2D = %Enemy1Marker
+@onready var _enemy_2_marker: Marker2D = %Enemy2Marker
+@onready var _enemy_3_marker: Marker2D = %Enemy3Marker
+@onready var _ally_1_marker: Marker2D = %Ally1Marker
+@onready var _ally_2_marker: Marker2D = %Ally2Marker
+@onready var _ally_3_marker: Marker2D = %Ally3Marker
+
+
+const COMBATANT := preload("uid://s15n5wdul107")
 const BATTLE_BUTTON := preload("uid://lmeawgpaf568")
 
 
-var combatant_node_map: Dictionary[Combatant, Node2D] = {}
+var combatant_node_map: Dictionary[Combatant, CombatantView] = {}
+var ally_markers: Array[Marker2D]
+var enemy_markers: Array[Marker2D]
+
+
+func _ready() -> void:
+	ally_markers = [_ally_1_marker, _ally_2_marker, _ally_3_marker]
+	enemy_markers = [_enemy_1_marker, _enemy_2_marker,_enemy_3_marker]
 
 
 func setup(allies: Array[Combatant], enemies: Array[Combatant]) -> void:
-	combatant_node_map[allies[0]] = _ally_node
-	_ally_node.get_node("HealthBar").max_value = allies[0].max_health
-	_ally_node.get_node("HealthBar").value = allies[0].current_health
-	_ally_node.get_node("ManaBar").max_value = allies[0].max_mana
-	_ally_node.get_node("ManaBar").value = allies[0].current_mana
-	
-	combatant_node_map[enemies[0]] = _enemy_node
-	_enemy_node.get_node("HealthBar").max_value = enemies[0].max_health
-	_enemy_node.get_node("HealthBar").value = enemies[0].current_health
-	_enemy_node.get_node("ManaBar").max_value = enemies[0].max_mana
-	_enemy_node.get_node("ManaBar").value = enemies[0].current_mana
+	create_team_nodes(allies, ally_markers, true)
+	create_team_nodes(enemies, enemy_markers)
+
+
+func create_team_nodes(team: Array[Combatant], markers: Array[Marker2D], mirrored=false) -> void:
+	for i in range(len(team)):
+		var combatant := team[i]
+		var combatant_node: CombatantView = COMBATANT.instantiate()
+		add_child(combatant_node)
+		combatant_node_map[combatant] = combatant_node
+		combatant_node.set_max_health(combatant.max_health)
+		combatant_node.set_health(combatant.current_health)
+		combatant_node.set_max_mana(combatant.max_mana)
+		combatant_node.set_mana(combatant.current_mana)
+		combatant_node.position = markers[i].position
+		if mirrored:
+			combatant_node.mirror()
 
 
 func present(results: Array[Result]) -> void:
@@ -40,18 +63,18 @@ func present(results: Array[Result]) -> void:
 		match result.kind:
 			Result.ResultKind.DAMAGE:
 				if source:
-					await attack_animation(combatant_node_map[source], combatant_node_map[target])
+					await combatant_node_map[source].attack_animation(combatant_node_map[target])
 				
-				attacked_animation(combatant_node_map[target])
-				combatant_node_map[target].get_node("HealthBar").value = result.health_after
-				await create_floating_text(combatant_node_map[target], str(result.amount), Color.RED, Motion.UP)
+				combatant_node_map[target].attacked_animation()
+				combatant_node_map[target].set_health(result.health_after)
+				await combatant_node_map[target].create_floating_text(str(result.amount), Color.RED, Motion.UP)
 				
 				if source:
-					await fallback_animation(combatant_node_map[source], combatant_node_map[target])
+					await combatant_node_map[source].fallback_animation(combatant_node_map[target])
 				
 			Result.ResultKind.HEAL:
-				combatant_node_map[target].get_node("HealthBar").value = result.health_after
-				await create_floating_text(combatant_node_map[target], str(result.amount), Color.GREEN, Motion.UP)
+				combatant_node_map[target].set_health(result.health_after)
+				await combatant_node_map[target].create_floating_text(str(result.amount), Color.GREEN, Motion.UP)
 				
 			Result.ResultKind.STATUS_APPLIED:
 				var text: String
@@ -71,83 +94,16 @@ func present(results: Array[Result]) -> void:
 					color = Color.GRAY
 					motion = Motion.ARC
 				
-				await create_floating_text(combatant_node_map[target], text, color, motion)
+				await combatant_node_map[target].create_floating_text(text, color, motion)
 			
 			Result.ResultKind.DEATH:
-				var tween := create_tween()
-				tween.tween_property(combatant_node_map[target], "modulate:a", 0, 1.0)
-				await tween.finished
+				await combatant_node_map[target].death_animation()
 			
 			Result.ResultKind.MANA_CHANGED:
-				combatant_node_map[target].get_node("ManaBar").value = result.mana_after
+				combatant_node_map[target].set_mana(result.mana_after)
 			
 			_:
 				pass
-
-
-func attack_animation(source: Node2D, target: Node2D) -> void:
-	var start_position := source.position
-	var direction := -1.0 if target.global_position.x > source.global_position.x else 1.0
-	
-	var tween := create_tween()
-	tween.tween_method(
-		func (t: float) -> void:
-			source.position.x = start_position.x - 100.0 * t * direction
-			source.position.y = start_position.y - 50.0 * 4 * t * (1 - t)
-	, 0.0, 1.0, 0.5
-	)
-	
-	await tween.finished
-
-
-func attacked_animation(target: Node2D) -> void:
-	var sprite: Sprite2D = target.get_node("Sprite2D")
-	var tween := create_tween()
-	tween.tween_property(sprite, "position:x", -10.0, 0.05).as_relative()
-	tween.tween_property(sprite, "position:x", 20.0, 0.1).as_relative()
-	tween.tween_property(sprite, "position:x", -10.0, 0.05).as_relative()
-	
-	await tween.finished
-
-
-func fallback_animation(source: Node2D, target: Node2D) -> void:
-	var start_position := source.position
-	var direction := -1.0 if target.global_position.x > source.global_position.x else 1.0
-	
-	var tween := create_tween()
-	tween.tween_property(source, "position:x", 100.0 * direction, 0.4).as_relative()
-	
-	await tween.finished
-
-
-func create_floating_text(target: Node2D, text: String, color: Color, motion: Motion) -> void:
-	var label := Label.new()
-	add_child(label)	
-	label.text = text
-	label.global_position = target.global_position
-	label.modulate = color
-	
-	var label_tween := create_tween()
-	match motion:
-		Motion.UP:
-			label.global_position.y += 20.0
-			label_tween.tween_property(label, "global_position:y", -50.0, 0.3).as_relative()
-		
-		Motion.DOWN:
-			label.global_position.y -= 40.0
-			label_tween.tween_property(label, "global_position:y", 50.0, 0.3).as_relative()
-		
-		Motion.ARC:
-			var start_position = label.global_position
-			label_tween.tween_method(
-				func (t: float) -> void:
-					label.position.y = start_position.y - 40.0 * 2 * t * (1 - t)
-			, 0.0, 1.0, 0.3
-			)
-		
-	label_tween.tween_property(label, "modulate:a", 0.0, 0.3)
-	label_tween.finished.connect(label.queue_free)
-	await label_tween.finished
 
 
 func show_battle_menu(combatant: Combatant) -> void:

@@ -8,7 +8,7 @@
 
 [sub_resource type="Resource" id="Resource_yry4e"]
 script = ExtResource("2_yry4e")
-amount = 5.0
+ratio = 1.2
 metadata/_custom_type_script = "uid://l0nmott8qf82"
 
 [sub_resource type="Resource" id="Resource_xbvhe"]
