@@ -22,8 +22,6 @@ static func resolve(actions: Array[Action]) -> Array[Result]:
 		if action.source.is_dead:
 			continue
 		
-		var prev_target_is_dead := action.target.is_dead
-		
 		# Remove Mana
 		if action.mana_cost:
 			var mana_res := Result.new()
@@ -33,14 +31,17 @@ static func resolve(actions: Array[Action]) -> Array[Result]:
 			mana_res.mana_after = action.source.current_mana
 			results.append(mana_res)
 		
-		# Perform Action
-		for effect in action.effects:
-			var res := effect.apply(action.source, action.target)
-			results.append_array(res)
-		
-		if not prev_target_is_dead and action.target.is_dead:
-			prev_target_is_dead = true
-			results.append(_death_result(action.target))
+		for target in action.targets:
+			var prev_target_is_dead := target.is_dead
+			
+			# Perform Action
+			for effect in action.effects:
+				var res := effect.apply(action.source, target)
+				results.append_array(res)
+			
+			if not prev_target_is_dead and target.is_dead:
+				prev_target_is_dead = true
+				results.append(_death_result(target))
 		
 		# On Turn End
 		var removed_statuses: Array[StatusEffect] = []

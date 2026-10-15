@@ -2,9 +2,19 @@ class_name CombatantView
 extends Node2D
 
 
+signal target_node_chosen(target: CombatantView)
+
+
 @onready var _animated_sprite_2d: AnimatedSprite2D = %AnimatedSprite2D
 @onready var _health_bar: ProgressBar = %HealthBar
 @onready var _mana_bar: ProgressBar = %ManaBar
+@onready var _area_2d: Area2D = %Area2D
+@onready var _target_box: Sprite2D = %TargetBox
+
+
+func _ready() -> void:
+	disable_click()
+	_area_2d.input_event.connect(_on_area_2d_input_event)
 
 
 func set_max_health(amount: float) -> void:
@@ -52,7 +62,6 @@ func attacked_animation() -> void:
 
 
 func fallback_animation(target: Node2D) -> void:
-	var start_position := position
 	var direction := -1.0 if target.position.x > position.x else 1.0
 	
 	var tween := create_tween()
@@ -95,3 +104,19 @@ func create_floating_text(text: String, color: Color, motion: BattleView.Motion)
 	label_tween.tween_property(label, "modulate:a", 0.0, 0.3)
 	label_tween.finished.connect(label.queue_free)
 	await label_tween.finished
+
+
+func _on_area_2d_input_event(_viewport: Node, event: InputEvent, _shade_idx: int) -> void:
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			target_node_chosen.emit(self)
+
+
+func enable_click() -> void:
+	_area_2d.visible = true
+	_target_box.visible = true
+
+
+func disable_click() -> void:
+	_area_2d.visible = false
+	_target_box.visible = false

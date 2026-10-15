@@ -1,17 +1,18 @@
 extends Node2D
 
 
-@onready var _battle_view: Node2D = %BattleView
+@onready var _battle_view: BattleView = %BattleView
 
 
-enum BattleStates { START, RESOLVE_TURN_START, PRESENT_TURN_START, SELECT, RESOLVE, PRESENT, VICTORY, DEFEAT }
+enum BattleStates { START, RESOLVE_TURN_START, PRESENT_TURN_START, SELECT_ACTION, SELECT_TARGET, RESOLVE, PRESENT, VICTORY, DEFEAT }
 const BLOCKING_STATES := [BattleStates.VICTORY, BattleStates.DEFEAT]
 var state := BattleStates.START
 
 
-var current_combatant: Combatant = null
-var is_player_turn := false
-var chosen_skill: Skill = null
+var current_combatant: Combatant
+var is_player_turn: bool
+var chosen_skill: Skill
+var chosen_targets: Array[Combatant]
 
 
 var ally_team: Array[Combatant]
@@ -58,16 +59,44 @@ func advance() -> void:
 				elif current_combatant.is_dead:
 					state = BattleStates.RESOLVE_TURN_START
 				else:
-					state = BattleStates.SELECT
+					state = BattleStates.SELECT_ACTION
 			
-			BattleStates.SELECT:
+			BattleStates.SELECT_ACTION:
 				if is_player_turn and chosen_skill == null:
 					_battle_view.show_battle_menu(current_combatant)
 					break
 				
-				actions = _select_actions(current_combatant)
-				state = BattleStates.RESOLVE
+				# Enemy randomly chooses a skill or basic attack
+				if not is_player_turn:
+					var valid_skills: Array[Skill] = [current_combatant.basic_attack]
+					for skill in current_combatant.skills:
+						if current_combatant.current_mana >= skill.mana_cost:
+							valid_skills.append(skill)
+					chosen_skill = valid_skills.pick_random()
 				
+				state = BattleStates.SELECT_TARGET
+			
+			BattleStates.SELECT_TARGET:
+				if not chosen_skill:
+					state = BattleStates.SELECT_ACTION
+					break
+				elif not is_player_turn:
+					var valid_targets := _get_targets(chosen_skill, current_combatant, enemy_team, ally_team)
+					if chosen_skill.target_type == Skill.TargetType.ENEMY:
+						chosen_targets = [valid_targets.pick_random()]
+				elif chosen_targets.is_empty():
+					var valid_targets := _get_targets(chosen_skill, current_combatant, ally_team, enemy_team)
+					if chosen_skill == current_combatant.basic_attack:
+						_battle_view.show_targeting_menu(chosen_skill, current_combatant, valid_targets)
+					else:
+						_battle_view.show_targeting_menu(chosen_skill, current_combatant, valid_targets)
+					break
+				
+				actions = _create_actions(chosen_skill, current_combatant, chosen_targets)
+				chosen_skill = null
+				chosen_targets = []
+				state = BattleStates.RESOLVE
+			
 			BattleStates.RESOLVE:
 				results = Resolution.resolve(actions)
 				state = BattleStates.PRESENT
@@ -82,14 +111,14 @@ func advance() -> void:
 					state = BattleStates.VICTORY
 				else:
 					state = BattleStates.RESOLVE_TURN_START
-				
+			
 			BattleStates.VICTORY:
 				for party_member in GameState.party_members:
 					party_member.current_health = party_member_map[party_member].current_health
 					party_member.current_mana = party_member_map[party_member].current_mana
 				GameState.returning_from_battle = true
 				get_tree().change_scene_to_file("uid://mtwtyjlq7lkx")
-				
+			
 			BattleStates.DEFEAT:
 				get_tree().change_scene_to_file("uid://chn2oyk85qt5m")
 		
@@ -113,33 +142,20 @@ func _battle_start() -> void:
 	_battle_view.setup(ally_team, enemy_team)
 	
 	_battle_view.skill_chosen.connect(_on_skill_chosen)
+	_battle_view.target_chosen.connect(_on_target_chosen)
+	_battle_view.cancel.connect(_on_cancel)
 
 
-func _select_actions(combatant: Combatant) -> Array[Action]:
+func _create_actions(skill: Skill, source: Combatant, targets: Array[Combatant]) -> Array[Action]:
 	var actions: Array[Action] = []
 	
-	if combatant in ally_team:
-		var ally_action := Action.new()
-		ally_action.source = combatant
-		ally_action.target = _get_target(chosen_skill, combatant, ally_team, enemy_team)
-		ally_action.mana_cost = chosen_skill.mana_cost
-		ally_action.effects = chosen_skill.effects
-		actions.append(ally_action)
-		chosen_skill = null
-	
-	if combatant in enemy_team:
-		var valid_skills: Array[Skill] = [combatant.basic_attack]
-		for skill in combatant.skills:
-			if combatant.current_mana >= skill.mana_cost:
-				valid_skills.append(skill)
-		
-		var random_skill: Skill = valid_skills.pick_random()
-		var enemy_action := Action.new()
-		enemy_action.source = combatant
-		enemy_action.target = _get_target(random_skill, combatant, enemy_team, ally_team)
-		enemy_action.mana_cost = random_skill.mana_cost
-		enemy_action.effects = random_skill.effects
-		actions.append(enemy_action)
+	# Update when a skill can produce multiple actions
+	var action := Action.new()
+	action.source = source
+	action.targets = targets
+	action.mana_cost = skill.mana_cost
+	action.effects = skill.effects
+	actions.append(action)
 	
 	return actions
 
@@ -197,19 +213,37 @@ func _set_next_combatant() -> void:
 	is_player_turn = current_combatant in ally_team
 
 
-func _get_target(skill: Skill, source: Combatant, allies: Array[Combatant], enemies: Array[Combatant]) -> Combatant:
-	var target: Combatant
+func _get_targets(skill: Skill, source: Combatant, allies: Array[Combatant], enemies: Array[Combatant]) -> Array[Combatant]:
+	var valid_targets: Array[Combatant]
 	match skill.target_type:
 		Skill.TargetType.SELF:
-			target = source
+			valid_targets = [source]
 		Skill.TargetType.ENEMY:
-			target = enemies[0]
+			for enemy in enemies:
+				if not enemy.is_dead:
+					valid_targets.append(enemy)
 		_:
-			push_error("Not a valid target type")
-	return target
+			push_error("Invalid target type")
+	return valid_targets
 
 
 func _on_skill_chosen(skill: Skill) -> void:
+	if state != BattleStates.SELECT_ACTION:
+		return
 	_battle_view.hide_battle_menu()
 	chosen_skill = skill
+	advance()
+
+
+func _on_target_chosen(target: Combatant) -> void:
+	if state != BattleStates.SELECT_TARGET:
+		return
+	_battle_view.hide_targeting_menu()
+	chosen_targets = [target]
+	advance()
+
+
+func _on_cancel() -> void:
+	chosen_skill = null
+	state = BattleStates.SELECT_ACTION
 	advance()

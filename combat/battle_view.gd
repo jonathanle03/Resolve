@@ -3,13 +3,13 @@ extends Node2D
 
 
 signal skill_chosen(skill: Skill)
+signal target_chosen(target: Combatant)
+signal cancel
 
 
 enum Motion { UP, DOWN, ARC }
 
 
-@onready var _ally_node: Node2D = %AllyNode
-@onready var _enemy_node: Node2D = %EnemyNode
 @onready var _v_box_container: VBoxContainer = %VBoxContainer
 
 
@@ -40,12 +40,13 @@ func setup(allies: Array[Combatant], enemies: Array[Combatant]) -> void:
 	create_team_nodes(enemies, enemy_markers)
 
 
-func create_team_nodes(team: Array[Combatant], markers: Array[Marker2D], mirrored=false) -> void:
+func create_team_nodes(team: Array[Combatant], markers: Array[Marker2D], mirrored: bool = false) -> void:
 	for i in range(len(team)):
 		var combatant := team[i]
 		var combatant_node: CombatantView = COMBATANT.instantiate()
 		add_child(combatant_node)
 		combatant_node_map[combatant] = combatant_node
+		
 		combatant_node.set_max_health(combatant.max_health)
 		combatant_node.set_health(combatant.current_health)
 		combatant_node.set_max_mana(combatant.max_mana)
@@ -53,6 +54,11 @@ func create_team_nodes(team: Array[Combatant], markers: Array[Marker2D], mirrore
 		combatant_node.position = markers[i].position
 		if mirrored:
 			combatant_node.mirror()
+		
+		combatant_node.target_node_chosen.connect(
+			func(_target_node: CombatantView) -> void:
+				target_chosen.emit(combatant)
+		)
 
 
 func present(results: Array[Result]) -> void:
@@ -157,3 +163,26 @@ func hide_battle_menu() -> void:
 		_v_box_container.remove_child(button)
 		button.queue_free()
 	_v_box_container.visible = false
+
+
+func show_targeting_menu(skill: Skill, source: Combatant, valid_targets: Array[Combatant]) -> void:
+	for target in valid_targets:
+		combatant_node_map[target].enable_click()
+	
+	var back_button: BattleButton = BATTLE_BUTTON.instantiate()
+	_v_box_container.add_child(back_button)
+	
+	back_button.set_labels("Back", "")
+	back_button.set_binding(
+		func():
+			hide_targeting_menu()
+			cancel.emit()
+	)
+	
+	_v_box_container.visible = true
+
+
+func hide_targeting_menu() -> void:
+	for node in combatant_node_map.values():
+		node.disable_click()
+	hide_battle_menu()

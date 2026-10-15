@@ -3,6 +3,6 @@ extends RefCounted
 
 
 var source: Combatant
-var target: Combatant
+var targets: Array[Combatant]
 var mana_cost: float
 var effects: Array[Effect]

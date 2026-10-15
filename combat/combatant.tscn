@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cpbqvqdl3vchw" path="res://combat/combatant_view.gd" id="1_3susy"]
 [ext_resource type="Texture2D" uid="uid://bj3u23elt8iot" path="res://assets/Blue_Warrior_Idle.png" id="2_3susy"]
+[ext_resource type="Texture2D" uid="uid://13tfwrc4pcnb" path="res://assets/Cursor_04.png" id="3_qf25c"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qf25c"]
 atlas = ExtResource("2_3susy")
@@ -81,6 +82,9 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_18jcc"]
+size = Vector2(128, 128)
+
 [node name="Combatant" type="Node2D" unique_id=748099328]
 script = ExtResource("1_3susy")
 
@@ -88,7 +92,7 @@ script = ExtResource("1_3susy")
 unique_name_in_owner = true
 sprite_frames = SubResource("SpriteFrames_18jcc")
 autoplay = "default"
-frame_progress = 0.59563226
+frame_progress = 0.14563574
 
 [node name="HealthBar" type="ProgressBar" parent="." unique_id=798772437]
 unique_name_in_owner = true
@@ -110,3 +114,13 @@ scale = Vector2(0.997861, 0.62064385)
 theme_override_styles/fill = SubResource("StyleBoxFlat_qf25c")
 value = 50.0
 show_percentage = false
+
+[node name="TargetBox" type="Sprite2D" parent="." unique_id=530288735]
+unique_name_in_owner = true
+texture = ExtResource("3_qf25c")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=616332190]
+unique_name_in_owner = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=874907541]
+shape = SubResource("RectangleShape2D_18jcc")
