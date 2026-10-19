@@ -8,10 +8,11 @@ extends Resource
 @export var attack: float
 @export var basic_attack: Skill
 @export var skills: Array[Skill]
+@export var sprites: SpriteFrames
 
 
 func build_combatant() -> Combatant:
-	var combatant := Combatant.new(name, max_health, max_mana, attack)
+	var combatant := Combatant.new(name, max_health, max_mana, attack, sprites)
 	combatant.basic_attack = basic_attack
 	combatant.skills = skills.duplicate()
 	return combatant

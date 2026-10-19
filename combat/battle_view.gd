@@ -52,6 +52,8 @@ func create_team_nodes(team: Array[Combatant], markers: Array[Marker2D], mirrore
 		combatant_node.set_max_mana(combatant.max_mana)
 		combatant_node.set_mana(combatant.current_mana)
 		combatant_node.position = markers[i].position
+		
+		combatant_node.set_sprites(combatant.sprites)
 		if mirrored:
 			combatant_node.mirror()
 		

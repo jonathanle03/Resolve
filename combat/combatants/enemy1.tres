@@ -4,6 +4,105 @@
 [ext_resource type="Script" uid="uid://dua2xmaf6ki56" path="res://combat/model/skill.gd" id="2_wp4n2"]
 [ext_resource type="Resource" uid="uid://ibnd6guue0lq" path="res://combat/skills/basic_attack.tres" id="3_abic2"]
 [ext_resource type="Resource" uid="uid://buwgtht7mud10" path="res://combat/skills/buff_attack.tres" id="5_caflt"]
+[ext_resource type="Texture2D" uid="uid://bi0kb0rthxohe" path="res://assets/Red_Warrior_Attack1.png" id="5_jpbjo"]
+[ext_resource type="Texture2D" uid="uid://c6pji74h2wr6g" path="res://assets/Red_Warrior_Idle.png" id="6_ebm75"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e5nxf"]
+atlas = ExtResource("5_jpbjo")
+region = Rect2(0, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g34ni"]
+atlas = ExtResource("5_jpbjo")
+region = Rect2(192, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wiqs5"]
+atlas = ExtResource("5_jpbjo")
+region = Rect2(384, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_spmgd"]
+atlas = ExtResource("5_jpbjo")
+region = Rect2(576, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t8861"]
+atlas = ExtResource("6_ebm75")
+region = Rect2(0, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5vug4"]
+atlas = ExtResource("6_ebm75")
+region = Rect2(192, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dw1sb"]
+atlas = ExtResource("6_ebm75")
+region = Rect2(384, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8caqo"]
+atlas = ExtResource("6_ebm75")
+region = Rect2(576, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cojkd"]
+atlas = ExtResource("6_ebm75")
+region = Rect2(768, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y7gjl"]
+atlas = ExtResource("6_ebm75")
+region = Rect2(960, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2cp6c"]
+atlas = ExtResource("6_ebm75")
+region = Rect2(1152, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3vvvg"]
+atlas = ExtResource("6_ebm75")
+region = Rect2(1344, 0, 192, 192)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rjig5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e5nxf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g34ni")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wiqs5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_spmgd")
+}],
+"loop": 0,
+"name": &"attacking",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t8861")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5vug4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dw1sb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8caqo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cojkd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y7gjl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2cp6c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3vvvg")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 10.0
+}]
 
 [resource]
 resource_name = "Enemy 1"
@@ -14,4 +113,5 @@ max_mana = 15.0
 attack = 4.0
 basic_attack = ExtResource("3_abic2")
 skills = Array[ExtResource("2_wp4n2")]([ExtResource("5_caflt")])
+sprites = SubResource("SpriteFrames_rjig5")
 metadata/_custom_type_script = "uid://b7rj3ty5ylpu2"

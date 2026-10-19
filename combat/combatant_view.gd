@@ -33,11 +33,27 @@ func set_mana(amount: float) -> void:
 	_mana_bar.value = amount
 
 
+func set_sprites(sprites: SpriteFrames) -> void:
+	if not sprites.has_animation("idle") or not sprites.has_animation("attacking"):
+		push_error("Missing combatant animations")
+	elif sprites.get_animation_loop("attacking"):
+		push_error("Attacking animations is looping")
+	
+	_animated_sprite_2d.sprite_frames = sprites
+	_animated_sprite_2d.play("idle")
+
+
 func mirror() -> void:
 	_animated_sprite_2d.flip_h = true
 
 
 func attack_animation(target: Node2D) -> void:
+	if _animated_sprite_2d.sprite_frames.has_animation("attacking"):
+		_animated_sprite_2d.play("attacking")
+		await _animated_sprite_2d.animation_finished
+		_animated_sprite_2d.play("idle")
+		return
+	
 	var start_position := position
 	var direction := -1.0 if target.position.x > position.x else 1.0
 	
@@ -54,14 +70,17 @@ func attack_animation(target: Node2D) -> void:
 
 func attacked_animation() -> void:
 	var tween := create_tween()
-	tween.tween_property(_animated_sprite_2d, "position:x", -10.0, 0.05).as_relative()
-	tween.tween_property(_animated_sprite_2d, "position:x", 20.0, 0.1).as_relative()
-	tween.tween_property(_animated_sprite_2d, "position:x", -10.0, 0.05).as_relative()
+	tween.tween_property(_animated_sprite_2d, "position:x", -8.0, 0.04).as_relative()
+	tween.tween_property(_animated_sprite_2d, "position:x", 16.0, 0.08).as_relative()
+	tween.tween_property(_animated_sprite_2d, "position:x", -8.0, 0.04).as_relative()
 	
 	await tween.finished
 
 
 func fallback_animation(target: Node2D) -> void:
+	if _animated_sprite_2d.sprite_frames.has_animation("attacking"):
+		return
+	
 	var direction := -1.0 if target.position.x > position.x else 1.0
 	
 	var tween := create_tween()
@@ -72,7 +91,7 @@ func fallback_animation(target: Node2D) -> void:
 
 func death_animation() -> void:
 	var tween := create_tween()
-	tween.tween_property(self, "modulate:a", 0, 1.0)
+	tween.tween_property(self, "modulate:a", 0, 0.6)
 	await tween.finished
 
 
@@ -106,12 +125,6 @@ func create_floating_text(text: String, color: Color, motion: BattleView.Motion)
 	await label_tween.finished
 
 
-func _on_area_2d_input_event(_viewport: Node, event: InputEvent, _shade_idx: int) -> void:
-	if event is InputEventMouseButton and event.pressed:
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			target_node_chosen.emit(self)
-
-
 func enable_click() -> void:
 	_area_2d.visible = true
 	_target_box.visible = true
@@ -120,3 +133,9 @@ func enable_click() -> void:
 func disable_click() -> void:
 	_area_2d.visible = false
 	_target_box.visible = false
+
+
+func _on_area_2d_input_event(_viewport: Node, event: InputEvent, _shade_idx: int) -> void:
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			target_node_chosen.emit(self)

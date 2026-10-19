@@ -30,16 +30,19 @@ var attack: float
 var basic_attack: Skill
 var skills: Array[Skill]
 
+var sprites: SpriteFrames
+
 var status_effects: Array[StatusEffect]
 
 
-func _init(combatant_name: String, combatant_max_health: float, combatant_max_mana: float, combatant_attack: float) -> void:
+func _init(combatant_name: String, combatant_max_health: float, combatant_max_mana: float, combatant_attack: float, combatant_sprites: SpriteFrames) -> void:
 	name = combatant_name
 	max_health = combatant_max_health
 	current_health = max_health
 	max_mana = combatant_max_mana
 	current_mana = max_mana
 	attack = combatant_attack
+	sprites = combatant_sprites
 	status_effects = []
 
 
