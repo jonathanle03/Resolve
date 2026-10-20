@@ -28,7 +28,7 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_accept") and not event.is_echo() and (state in BLOCKING_STATES):
+	if event.is_action_pressed("ui_accept") and not event.is_echo() and (state == BattleStates.DEFEAT):
 		advance()
 
 
@@ -108,16 +108,13 @@ func advance() -> void:
 					state = BattleStates.DEFEAT
 				elif _is_team_dead(enemy_team):
 					print("Victory!")
+					_battle_view.show_victory_screen()
 					state = BattleStates.VICTORY
 				else:
 					state = BattleStates.RESOLVE_TURN_START
 			
 			BattleStates.VICTORY:
-				for party_member in GameState.party_members:
-					party_member.current_health = party_member_map[party_member].current_health
-					party_member.current_mana = party_member_map[party_member].current_mana
-				GameState.returning_from_battle = true
-				get_tree().change_scene_to_file("uid://mtwtyjlq7lkx")
+				pass
 			
 			BattleStates.DEFEAT:
 				get_tree().change_scene_to_file("uid://chn2oyk85qt5m")
@@ -144,6 +141,7 @@ func _battle_start() -> void:
 	_battle_view.skill_chosen.connect(_on_skill_chosen)
 	_battle_view.target_chosen.connect(_on_target_chosen)
 	_battle_view.cancel.connect(_on_cancel)
+	_battle_view.continue_to_overworld.connect(_on_continue_to_overworld)
 
 
 func _create_actions(skill: Skill, source: Combatant, targets: Array[Combatant]) -> Array[Action]:
@@ -247,3 +245,11 @@ func _on_cancel() -> void:
 	chosen_skill = null
 	state = BattleStates.SELECT_ACTION
 	advance()
+
+
+func _on_continue_to_overworld() -> void:
+	for party_member in GameState.party_members:
+		party_member.current_health = party_member_map[party_member].current_health
+		party_member.current_mana = party_member_map[party_member].current_mana
+	GameState.returning_from_battle = true
+	get_tree().change_scene_to_file("uid://br1ry85r6s0ql")

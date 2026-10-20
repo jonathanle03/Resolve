@@ -7,9 +7,33 @@ signal target_node_chosen(target: CombatantView)
 
 @onready var _animated_sprite_2d: AnimatedSprite2D = %AnimatedSprite2D
 @onready var _health_bar: ProgressBar = %HealthBar
+@onready var _health_label: Label = %HealthLabel
 @onready var _mana_bar: ProgressBar = %ManaBar
+@onready var _mana_label: Label = %ManaLabel
 @onready var _area_2d: Area2D = %Area2D
 @onready var _target_box: Sprite2D = %TargetBox
+
+
+var max_health: float:
+	set(amount):
+		max_health = amount
+		_health_bar.max_value = amount
+		_health_label.text = str(current_health) + " / " + str(max_health)
+var current_health: float:
+	set(amount):
+		current_health = amount
+		_health_bar.value = amount
+		_health_label.text = str(current_health) + " / " + str(max_health)
+var max_mana: float:
+	set(amount):
+		max_mana = amount
+		_mana_bar.max_value = amount
+		_mana_label.text = str(current_mana) + " / " + str(max_mana)
+var current_mana: float:
+	set(amount):
+		current_mana = amount
+		_mana_bar.value = amount
+		_mana_label.text = str(current_mana) + " / " + str(max_mana)
 
 
 func _ready() -> void:
@@ -18,19 +42,19 @@ func _ready() -> void:
 
 
 func set_max_health(amount: float) -> void:
-	_health_bar.max_value = amount
+	max_health = amount
 
 
 func set_health(amount: float) -> void:
-	_health_bar.value = amount
+	current_health = amount
 
 
 func set_max_mana(amount: float) -> void:
-	_mana_bar.max_value = amount
+	max_mana = amount
 
 
 func set_mana(amount: float) -> void:
-	_mana_bar.value = amount
+	current_mana = amount
 
 
 func set_sprites(sprites: SpriteFrames) -> void:

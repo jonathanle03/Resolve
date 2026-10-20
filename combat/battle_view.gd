@@ -5,12 +5,15 @@ extends Node2D
 signal skill_chosen(skill: Skill)
 signal target_chosen(target: Combatant)
 signal cancel
+signal continue_to_overworld
 
 
 enum Motion { UP, DOWN, ARC }
 
 
 @onready var _v_box_container: VBoxContainer = %VBoxContainer
+@onready var _victory_screen: Control = %VictoryScreen
+@onready var _continue_button: Button = %ContinueButton
 
 
 @onready var _enemy_1_marker: Marker2D = %Enemy1Marker
@@ -32,7 +35,8 @@ var enemy_markers: Array[Marker2D]
 
 func _ready() -> void:
 	ally_markers = [_ally_1_marker, _ally_2_marker, _ally_3_marker]
-	enemy_markers = [_enemy_1_marker, _enemy_2_marker,_enemy_3_marker]
+	enemy_markers = [_enemy_1_marker, _enemy_2_marker, _enemy_3_marker]
+	_continue_button.pressed.connect(continue_to_overworld.emit)
 
 
 func setup(allies: Array[Combatant], enemies: Array[Combatant]) -> void:
@@ -188,3 +192,11 @@ func hide_targeting_menu() -> void:
 	for node in combatant_node_map.values():
 		node.disable_click()
 	hide_battle_menu()
+
+
+func show_victory_screen() -> void:
+	_victory_screen.visible = true
+
+
+func hide_victory_screen() -> void:
+	_victory_screen.visible = false

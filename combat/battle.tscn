@@ -42,3 +42,54 @@ offset_left = 691.0
 offset_top = 416.0
 offset_right = 908.0
 offset_bottom = 482.0
+
+[node name="VictoryScreen" type="Control" parent="BattleView/CanvasLayer" unique_id=484745226]
+unique_name_in_owner = true
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="BattleView/CanvasLayer/VictoryScreen" unique_id=466620173]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.101960786, 0.101960786, 0.101960786, 0.25490198)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="BattleView/CanvasLayer/VictoryScreen/ColorRect" unique_id=1210514247]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -576.0
+offset_top = -324.0
+offset_right = 576.0
+offset_bottom = 324.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 50
+alignment = 1
+
+[node name="Label" type="Label" parent="BattleView/CanvasLayer/VictoryScreen/ColorRect/VBoxContainer" unique_id=224450191]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Victory!"
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="BattleView/CanvasLayer/VictoryScreen/ColorRect/VBoxContainer" unique_id=1239733717]
+layout_mode = 2
+
+[node name="ContinueButton" type="Button" parent="BattleView/CanvasLayer/VictoryScreen/ColorRect/VBoxContainer/VBoxContainer" unique_id=1283027656]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Continue"
