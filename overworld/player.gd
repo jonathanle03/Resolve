@@ -1,3 +1,4 @@
+class_name Player
 extends CharacterBody2D
 
 
@@ -10,14 +11,14 @@ var tracked_npc: NPC = null
 
 
 func _ready() -> void:
-	if GameState.returning_from_battle:
-		global_position = GameState.overworld_position
-	
 	_area_2d.body_entered.connect(_on_area_2d_body_entered)
 	_area_2d.body_exited.connect(_on_area_2d_body_exited)
 
 
 func _process(_delta: float) -> void:
+	if DialogueBox.is_active:
+		return
+	
 	if Input.is_action_pressed("move_right"):
 		_animated_sprite_2d.flip_h = false
 	elif Input.is_action_pressed("move_left"):

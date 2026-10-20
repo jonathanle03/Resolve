@@ -110,9 +110,9 @@ animations = [{
 [resource]
 script = ExtResource("1_b0tfu")
 name = "Party Member 1"
-max_health = 100.0
-max_mana = 20.0
-attack = 5.0
+max_health = 150.0
+max_mana = 30.0
+attack = 8.0
 basic_attack = ExtResource("3_h0xgo")
 skills = Array[ExtResource("2_1xfer")]([ExtResource("4_vk1uh"), ExtResource("5_1e82u"), ExtResource("6_4qylf"), ExtResource("7_vdr6p")])
 sprites = SubResource("SpriteFrames_8seiq")

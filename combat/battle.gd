@@ -82,14 +82,13 @@ func advance() -> void:
 					break
 				elif not is_player_turn:
 					var valid_targets := _get_targets(chosen_skill, current_combatant, enemy_team, ally_team)
-					if chosen_skill.target_type == Skill.TargetType.ENEMY:
+					if chosen_skill.target_type == Skill.TargetType.SELF:
+						chosen_targets = valid_targets
+					elif chosen_skill.target_type == Skill.TargetType.ENEMY:
 						chosen_targets = [valid_targets.pick_random()]
 				elif chosen_targets.is_empty():
 					var valid_targets := _get_targets(chosen_skill, current_combatant, ally_team, enemy_team)
-					if chosen_skill == current_combatant.basic_attack:
-						_battle_view.show_targeting_menu(chosen_skill, current_combatant, valid_targets)
-					else:
-						_battle_view.show_targeting_menu(chosen_skill, current_combatant, valid_targets)
+					_battle_view.show_targeting_menu(chosen_skill, current_combatant, valid_targets)
 					break
 				
 				actions = _create_actions(chosen_skill, current_combatant, chosen_targets)
@@ -129,7 +128,7 @@ func _battle_start() -> void:
 		ally_team.append(ally_combatant)
 		party_member_map[party_member] = ally_combatant
 	
-	for enemy in GameState.enemies:
+	for enemy in GameState.encounter.enemies:
 		var enemy_combatant := enemy.build_combatant()
 		enemy_team.append(enemy_combatant)
 	
@@ -180,11 +179,11 @@ func _present(results: Array[Result]) -> void:
 					print("%s died." % [result.target.name])
 	
 	print()
-	for combatant in ally_team:
-		print("%s %.1f / %.1f HP  %.1f / %.1f MP" % [combatant.name, combatant.current_health, combatant.max_health, combatant.current_mana, combatant.max_mana])
-	for combatant in enemy_team:
-		print("%s %.1f / %.1f HP  %.1f / %.1f MP" % [combatant.name, combatant.current_health, combatant.max_health, combatant.current_mana, combatant.max_mana])
-	print()
+	#for combatant in ally_team:
+		#print("%s %.1f / %.1f HP  %.1f / %.1f MP" % [combatant.name, combatant.current_health, combatant.max_health, combatant.current_mana, combatant.max_mana])
+	#for combatant in enemy_team:
+		#print("%s %.1f / %.1f HP  %.1f / %.1f MP" % [combatant.name, combatant.current_health, combatant.max_health, combatant.current_mana, combatant.max_mana])
+	#print()
 	
 	await _battle_view.present(results)
 

@@ -15,4 +15,5 @@ func _on_play_again_button_pressed() -> void:
 	party_member.current_mana = party_member.combatant_def.max_mana
 	GameState.party_members = [party_member]
 	GameState.returning_from_battle = false
+	GameState.encounter = null
 	get_tree().change_scene_to_file("uid://br1ry85r6s0ql")

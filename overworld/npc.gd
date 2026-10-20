@@ -12,8 +12,8 @@ func interact() -> void:
 	await DialogueBox.show_dialogue(dialogue)
 	GameState.overworld_position = global_position
 	
-	var enemy: CombatantDef = load("uid://du8a7ig01d1l5")
-	GameState.enemies = [enemy]
+	var encounter: Encounter = load("uid://dbr02kaip7gy6")
+	GameState.encounter = encounter
 	
 	get_tree().change_scene_to_file("uid://dsh8y6ogu1sfl")
 

@@ -1,9 +1,12 @@
 [gd_scene format=4 uid="uid://br1ry85r6s0ql"]
 
 [ext_resource type="Texture2D" uid="uid://cout2y252mlks" path="res://assets/Water Background color.png" id="1_nnj58"]
+[ext_resource type="Script" uid="uid://dqreb0vxwe471" path="res://overworld/overworld.gd" id="1_xp5fb"]
 [ext_resource type="PackedScene" uid="uid://bpn65tvu1pq6p" path="res://overworld/player.tscn" id="2_16ktt"]
 [ext_resource type="Texture2D" uid="uid://b14yp6818vpnd" path="res://assets/Tilemap_color1.png" id="2_nnj58"]
 [ext_resource type="PackedScene" uid="uid://8hboctqavbpv" path="res://overworld/npc.tscn" id="3_u2ss0"]
+[ext_resource type="Script" uid="uid://dn3y3mx0f2lmv" path="res://overworld/encounter_area.gd" id="5_uniiq"]
+[ext_resource type="Resource" uid="uid://w23i5im0fhr4" path="res://combat/encounters/random1.tres" id="6_a076f"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_a076f"]
 texture = ExtResource("1_nnj58")
@@ -149,8 +152,12 @@ physics_layer_0/collision_layer = 1
 physics_layer_0/collision_mask = 0
 sources/0 = SubResource("TileSetAtlasSource_criu7")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_18jcc"]
+size = Vector2(633, 1018)
+
 [node name="Overworld" type="Node2D" unique_id=887345934]
 y_sort_enabled = true
+script = ExtResource("1_xp5fb")
 
 [node name="Water" type="TileMapLayer" parent="." unique_id=505730289]
 z_index = -2
@@ -167,7 +174,19 @@ tile_map_data = PackedByteArray("AAAAAA4AAAAFAAUAAAABAA4AAAAGAAUAAAACAA4AAAAGAAU
 tile_set = SubResource("TileSet_5gdwa")
 
 [node name="Player" parent="." unique_id=998365929 instance=ExtResource("2_16ktt")]
+unique_name_in_owner = true
 position = Vector2(647, 513)
 
 [node name="NPC" parent="." unique_id=105354870 instance=ExtResource("3_u2ss0")]
 position = Vector2(334, 431)
+
+[node name="EncounterArea" type="Area2D" parent="." unique_id=1331118528]
+position = Vector2(1568, -160)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("5_uniiq")
+encounter = ExtResource("6_a076f")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EncounterArea" unique_id=274817738]
+position = Vector2(-99.5, 355)
+shape = SubResource("RectangleShape2D_18jcc")
