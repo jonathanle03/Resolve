@@ -7,6 +7,9 @@
 [ext_resource type="PackedScene" uid="uid://8hboctqavbpv" path="res://overworld/npc.tscn" id="3_u2ss0"]
 [ext_resource type="Script" uid="uid://dn3y3mx0f2lmv" path="res://overworld/encounter_area.gd" id="5_uniiq"]
 [ext_resource type="Resource" uid="uid://w23i5im0fhr4" path="res://combat/encounters/random1.tres" id="6_a076f"]
+[ext_resource type="PackedScene" uid="uid://c4uugu3hfvtec" path="res://overworld/decorations/house.tscn" id="8_fysd7"]
+[ext_resource type="PackedScene" uid="uid://brhefofao5x3x" path="res://overworld/decorations/tree.tscn" id="9_tyf74"]
+[ext_resource type="PackedScene" uid="uid://bldm8ydinryf1" path="res://overworld/decorations/bush.tscn" id="10_5dwah"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_a076f"]
 texture = ExtResource("1_nnj58")
@@ -190,3 +193,12 @@ encounter = ExtResource("6_a076f")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EncounterArea" unique_id=274817738]
 position = Vector2(-99.5, 355)
 shape = SubResource("RectangleShape2D_18jcc")
+
+[node name="House" parent="." unique_id=1334311702 instance=ExtResource("8_fysd7")]
+position = Vector2(992, 192)
+
+[node name="Tree" parent="." unique_id=514474354 instance=ExtResource("9_tyf74")]
+position = Vector2(608, 224)
+
+[node name="Bush" parent="." unique_id=1908364966 instance=ExtResource("10_5dwah")]
+position = Vector2(896, 384)

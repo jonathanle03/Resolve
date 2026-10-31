@@ -1,0 +1,83 @@
+[gd_scene format=3 uid="uid://bldm8ydinryf1"]
+
+[ext_resource type="Texture2D" uid="uid://b586ceueoo8l8" path="res://assets/Bush1.png" id="1_hf40q"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x4bke"]
+atlas = ExtResource("1_hf40q")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_redyc"]
+atlas = ExtResource("1_hf40q")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wlur3"]
+atlas = ExtResource("1_hf40q")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h3icj"]
+atlas = ExtResource("1_hf40q")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7wwxh"]
+atlas = ExtResource("1_hf40q")
+region = Rect2(512, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ytfv7"]
+atlas = ExtResource("1_hf40q")
+region = Rect2(640, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lxsck"]
+atlas = ExtResource("1_hf40q")
+region = Rect2(768, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8ei1p"]
+atlas = ExtResource("1_hf40q")
+region = Rect2(896, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_18jcc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x4bke")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_redyc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wlur3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h3icj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7wwxh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ytfv7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lxsck")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8ei1p")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_18jcc"]
+size = Vector2(62, 20)
+
+[node name="Bush" type="StaticBody2D" unique_id=1908364966]
+scale = Vector2(1.5, 1.5)
+collision_mask = 0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=273444777]
+sprite_frames = SubResource("SpriteFrames_18jcc")
+autoplay = "default"
+frame_progress = 0.86894256
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=474415402]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_18jcc")
