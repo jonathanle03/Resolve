@@ -28,6 +28,6 @@ func show_dialogue(lines: Array[String]) -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_accept") and not event.is_echo() and is_active:
+	if event.is_action_pressed("interact") and not event.is_echo() and is_active:
 		line_advanced.emit()
 		get_viewport().set_input_as_handled()

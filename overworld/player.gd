@@ -43,7 +43,7 @@ func _physics_process(_delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_accept") and not event.is_echo():
+	if event.is_action_pressed("interact") and not event.is_echo():
 		if tracked_npc and not DialogueBox.is_active:
 			tracked_npc.interact()
 

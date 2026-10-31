@@ -28,7 +28,7 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_accept") and not event.is_echo() and (state == BattleStates.DEFEAT):
+	if event.is_action_pressed("interact") and not event.is_echo() and (state == BattleStates.DEFEAT):
 		advance()
 
 
