@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b14yp6818vpnd"
-path="res://.godot/imported/Tilemap_color1.png-a3b8fe34523d2eeba3f621fc22be158b.ctex"
+uid="uid://dghh6argnhqkc"
+path="res://.godot/imported/Water Rocks_03.png-b3e8aab8eb113baf6c797c4a19e2e16d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Tilemap_color1.png"
-dest_files=["res://.godot/imported/Tilemap_color1.png-a3b8fe34523d2eeba3f621fc22be158b.ctex"]
+source_file="res://assets/Water Rocks_03.png"
+dest_files=["res://.godot/imported/Water Rocks_03.png-b3e8aab8eb113baf6c797c4a19e2e16d.ctex"]
 
 [params]
 
