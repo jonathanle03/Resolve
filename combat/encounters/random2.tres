@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Encounter" format=3 uid="uid://blmpcsf4cdjyx"]
+
+[ext_resource type="Script" uid="uid://b7rj3ty5ylpu2" path="res://combat/model/combatant_def.gd" id="1_2ikvu"]
+[ext_resource type="Resource" uid="uid://du8a7ig01d1l5" path="res://combat/combatants/enemy1.tres" id="2_b4i6p"]
+[ext_resource type="Script" uid="uid://yeuexryo10li" path="res://combat/model/encounter.gd" id="2_qn1t8"]
+
+[resource]
+script = ExtResource("2_qn1t8")
+enemies = Array[ExtResource("1_2ikvu")]([ExtResource("2_b4i6p"), ExtResource("2_b4i6p")])
+metadata/_custom_type_script = "uid://yeuexryo10li"

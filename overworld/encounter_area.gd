@@ -1,11 +1,11 @@
 extends Area2D
 
 
-@export var encounter: Encounter
+@export var encounters: Array[Encounter]
 
 
-const MIN_DISTANCE := 1000.0
-const MAX_DISTANCE := 2500.0
+const MIN_DISTANCE := 750.0
+const MAX_DISTANCE := 1500.0
 const ENCOUNTER_CHANCE := 0.001
 
 
@@ -15,6 +15,9 @@ var player: Player
 
 
 func _ready() -> void:
+	if encounters.is_empty():
+		push_error()
+	
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 
@@ -34,6 +37,7 @@ func _physics_process(delta: float) -> void:
 func trigger_battle() -> void:
 	distance_moved = 0.0
 	
+	var encounter = encounters.pick_random()
 	GameState.overworld_position = global_position
 	GameState.encounter = encounter
 	get_tree().change_scene_to_file("uid://dsh8y6ogu1sfl")

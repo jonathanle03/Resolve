@@ -11,6 +11,8 @@
 [ext_resource type="PackedScene" uid="uid://brhefofao5x3x" path="res://overworld/decorations/tree.tscn" id="9_tyf74"]
 [ext_resource type="PackedScene" uid="uid://bldm8ydinryf1" path="res://overworld/decorations/bush.tscn" id="10_5dwah"]
 [ext_resource type="Texture2D" uid="uid://dghh6argnhqkc" path="res://assets/Water Rocks_03.png" id="10_i8gr5"]
+[ext_resource type="Script" uid="uid://yeuexryo10li" path="res://combat/model/encounter.gd" id="11_85x44"]
+[ext_resource type="Resource" uid="uid://blmpcsf4cdjyx" path="res://combat/encounters/random2.tres" id="13_5ck1y"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_a076f"]
 texture = ExtResource("1_nnj58")
@@ -566,7 +568,7 @@ position = Vector2(2400, -448)
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("5_uniiq")
-encounter = ExtResource("6_a076f")
+encounters = Array[ExtResource("11_85x44")]([ExtResource("6_a076f")])
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EncounterArea" unique_id=274817738]
 shape = SubResource("RectangleShape2D_18jcc")
@@ -576,7 +578,7 @@ position = Vector2(4288, -128)
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("5_uniiq")
-encounter = ExtResource("6_a076f")
+encounters = Array[ExtResource("11_85x44")]([ExtResource("6_a076f"), ExtResource("13_5ck1y")])
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EncounterArea2" unique_id=1471986190]
 shape = SubResource("RectangleShape2D_kgfo8")
