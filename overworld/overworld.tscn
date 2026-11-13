@@ -9,9 +9,12 @@
 [ext_resource type="Resource" uid="uid://w23i5im0fhr4" path="res://combat/encounters/random1.tres" id="6_a076f"]
 [ext_resource type="PackedScene" uid="uid://c4uugu3hfvtec" path="res://overworld/decorations/house.tscn" id="8_fysd7"]
 [ext_resource type="PackedScene" uid="uid://brhefofao5x3x" path="res://overworld/decorations/tree.tscn" id="9_tyf74"]
+[ext_resource type="Texture2D" uid="uid://c6pji74h2wr6g" path="res://assets/Red_Warrior_Idle.png" id="10_5ck1y"]
 [ext_resource type="PackedScene" uid="uid://bldm8ydinryf1" path="res://overworld/decorations/bush.tscn" id="10_5dwah"]
 [ext_resource type="Texture2D" uid="uid://dghh6argnhqkc" path="res://assets/Water Rocks_03.png" id="10_i8gr5"]
 [ext_resource type="Script" uid="uid://yeuexryo10li" path="res://combat/model/encounter.gd" id="11_85x44"]
+[ext_resource type="Resource" uid="uid://dbr02kaip7gy6" path="res://combat/encounters/boss1.tres" id="11_cdqt2"]
+[ext_resource type="Texture2D" uid="uid://bj3u23elt8iot" path="res://assets/Blue_Warrior_Idle.png" id="12_nl4kv"]
 [ext_resource type="Resource" uid="uid://blmpcsf4cdjyx" path="res://combat/encounters/random2.tres" id="13_5ck1y"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_a076f"]
@@ -265,6 +268,134 @@ animations = [{
 }],
 "loop": 1,
 "name": &"default",
+"speed": 10.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_siaeo"]
+atlas = ExtResource("10_5ck1y")
+region = Rect2(0, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gym5p"]
+atlas = ExtResource("10_5ck1y")
+region = Rect2(192, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_blvs3"]
+atlas = ExtResource("10_5ck1y")
+region = Rect2(384, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4m742"]
+atlas = ExtResource("10_5ck1y")
+region = Rect2(576, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_moru0"]
+atlas = ExtResource("10_5ck1y")
+region = Rect2(768, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pgtea"]
+atlas = ExtResource("10_5ck1y")
+region = Rect2(960, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_drekx"]
+atlas = ExtResource("10_5ck1y")
+region = Rect2(1152, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_at4sm"]
+atlas = ExtResource("10_5ck1y")
+region = Rect2(1344, 0, 192, 192)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6tc4q"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_siaeo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gym5p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_blvs3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4m742")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_moru0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pgtea")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_drekx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_at4sm")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nu51l"]
+atlas = ExtResource("12_nl4kv")
+region = Rect2(0, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_25waf"]
+atlas = ExtResource("12_nl4kv")
+region = Rect2(192, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aqa4f"]
+atlas = ExtResource("12_nl4kv")
+region = Rect2(384, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q8w27"]
+atlas = ExtResource("12_nl4kv")
+region = Rect2(576, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ooal6"]
+atlas = ExtResource("12_nl4kv")
+region = Rect2(768, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e1428"]
+atlas = ExtResource("12_nl4kv")
+region = Rect2(960, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_07vnv"]
+atlas = ExtResource("12_nl4kv")
+region = Rect2(1152, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kftuy"]
+atlas = ExtResource("12_nl4kv")
+region = Rect2(1344, 0, 192, 192)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_4eu0g"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nu51l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_25waf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_aqa4f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q8w27")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ooal6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e1428")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_07vnv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kftuy")
+}],
+"loop": 1,
+"name": &"idle",
 "speed": 10.0
 }]
 
@@ -560,8 +691,17 @@ frame_progress = 0.3222948
 unique_name_in_owner = true
 position = Vector2(128, 128)
 
-[node name="NPC" parent="." unique_id=105354870 instance=ExtResource("3_u2ss0")]
+[node name="BossNPC" parent="." unique_id=105354870 instance=ExtResource("3_u2ss0")]
 position = Vector2(5568, -288)
+sprites = SubResource("SpriteFrames_6tc4q")
+dialogue = Array[String](["Hey you!", "Rapiers are not swords!"])
+encounter = ExtResource("11_cdqt2")
+
+[node name="HealNPC" parent="." unique_id=970794185 instance=ExtResource("3_u2ss0")]
+position = Vector2(5216, 128)
+sprites = SubResource("SpriteFrames_4eu0g")
+dialogue = Array[String](["There's a dangerous enemy up ahead.", "Let me heal your wounds."])
+heal_player = true
 
 [node name="EncounterArea" type="Area2D" parent="." unique_id=1331118528]
 position = Vector2(2400, -448)

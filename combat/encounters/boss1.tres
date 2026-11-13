@@ -7,7 +7,7 @@
 
 [resource]
 script = ExtResource("2_mtpv8")
-enemies = Array[ExtResource("1_mbl40")]([ExtResource("2_ydhwg"), ExtResource("2_ydhwg")])
+enemies = Array[ExtResource("1_mbl40")]([ExtResource("2_ydhwg"), ExtResource("2_ydhwg"), ExtResource("2_ydhwg")])
 victory_dialogue = Array[String](["You win this time...", "We'll be back!"])
 next_scene = ExtResource("3_ydhwg")
 metadata/_custom_type_script = "uid://yeuexryo10li"
