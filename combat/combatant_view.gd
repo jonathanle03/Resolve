@@ -18,22 +18,22 @@ var max_health: float:
 	set(amount):
 		max_health = amount
 		_health_bar.max_value = amount
-		_health_label.text = str(current_health) + " / " + str(max_health)
+		_set_health_label()
 var current_health: float:
 	set(amount):
 		current_health = amount
 		_health_bar.value = amount
-		_health_label.text = str(current_health) + " / " + str(max_health)
+		_set_health_label()
 var max_mana: float:
 	set(amount):
 		max_mana = amount
 		_mana_bar.max_value = amount
-		_mana_label.text = str(current_mana) + " / " + str(max_mana)
+		_set_mana_label()
 var current_mana: float:
 	set(amount):
 		current_mana = amount
 		_mana_bar.value = amount
-		_mana_label.text = str(current_mana) + " / " + str(max_mana)
+		_set_mana_label()
 
 
 func _ready() -> void:
@@ -58,10 +58,10 @@ func set_mana(amount: float) -> void:
 
 
 func set_sprites(sprites: SpriteFrames) -> void:
-	if not sprites.has_animation("idle") or not sprites.has_animation("attacking"):
-		push_error("Missing combatant animations")
-	elif sprites.get_animation_loop("attacking"):
-		push_error("Attacking animations is looping")
+	assert(sprites, "No combatant animations")
+	assert(sprites.has_animation("idle"), "No idle animation")
+	assert(sprites.has_animation("attacking"), "No attacking animation")
+	assert(sprites.get_animation_loop_mode("attacking") == SpriteFrames.LOOP_NONE, "Looping attacking animation")
 	
 	_animated_sprite_2d.sprite_frames = sprites
 	_animated_sprite_2d.play("idle")
@@ -71,25 +71,10 @@ func mirror() -> void:
 	_animated_sprite_2d.flip_h = true
 
 
-func attack_animation(target: Node2D) -> void:
-	if _animated_sprite_2d.sprite_frames.has_animation("attacking"):
-		_animated_sprite_2d.play("attacking")
-		await _animated_sprite_2d.animation_finished
-		_animated_sprite_2d.play("idle")
-		return
-	
-	var start_position := position
-	var direction := -1.0 if target.position.x > position.x else 1.0
-	
-	var tween := create_tween()
-	tween.tween_method(
-		func (t: float) -> void:
-			position.x = start_position.x - 100.0 * t * direction
-			position.y = start_position.y - 50.0 * 4 * t * (1 - t)
-	, 0.0, 1.0, 0.5
-	)
-	
-	await tween.finished
+func attack_animation() -> void:
+	_animated_sprite_2d.play("attacking")
+	await _animated_sprite_2d.animation_finished
+	_animated_sprite_2d.play("idle")
 
 
 func attacked_animation() -> void:
@@ -97,18 +82,6 @@ func attacked_animation() -> void:
 	tween.tween_property(_animated_sprite_2d, "position:x", -8.0, 0.04).as_relative()
 	tween.tween_property(_animated_sprite_2d, "position:x", 16.0, 0.08).as_relative()
 	tween.tween_property(_animated_sprite_2d, "position:x", -8.0, 0.04).as_relative()
-	
-	await tween.finished
-
-
-func fallback_animation(target: Node2D) -> void:
-	if _animated_sprite_2d.sprite_frames.has_animation("attacking"):
-		return
-	
-	var direction := -1.0 if target.position.x > position.x else 1.0
-	
-	var tween := create_tween()
-	tween.tween_property(self, "position:x", 100.0 * direction, 0.4).as_relative()
 	
 	await tween.finished
 
@@ -157,6 +130,14 @@ func enable_click() -> void:
 func disable_click() -> void:
 	_area_2d.visible = false
 	_target_box.visible = false
+
+
+func _set_health_label() -> void:
+	_health_label.text = "%.1f / %.1f" % [current_health, max_health]
+
+
+func _set_mana_label() -> void:
+	_mana_label.text = "%.1f / %.1f" % [current_mana, max_mana]
 
 
 func _on_area_2d_input_event(_viewport: Node, event: InputEvent, _shade_idx: int) -> void:

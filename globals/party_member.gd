@@ -12,3 +12,8 @@ func build_combatant() -> Combatant:
 	combatant.current_health = current_health
 	combatant.current_mana = current_mana
 	return combatant
+
+
+func full_heal() -> void:
+	current_health = combatant_def.max_health
+	current_mana = combatant_def.max_mana

@@ -23,18 +23,14 @@ func _ready() -> void:
 	_update_sprites()
 
 
-func interact() -> void:
+func interact(player: Player) -> void:
 	await DialogueBox.show_dialogue(dialogue)
 	
 	if heal_player:
-		for party_member in GameState.party_members:
-			party_member.current_health = party_member.combatant_def.max_health
-			party_member.current_mana = party_member.combatant_def.max_mana
+		GameState.full_heal_party()
 	
 	if encounter:
-		GameState.overworld_position = global_position
-		GameState.encounter = encounter
-		get_tree().change_scene_to_file("uid://dsh8y6ogu1sfl")
+		GameState.start_battle(player.global_position, encounter)
 
 
 func show_prompt() -> void:

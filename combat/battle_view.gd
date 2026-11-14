@@ -75,18 +75,15 @@ func present(results: Array[Result]) -> void:
 		match result.kind:
 			Result.ResultKind.DAMAGE:
 				if source:
-					await combatant_node_map[source].attack_animation(combatant_node_map[target])
+					await combatant_node_map[source].attack_animation()
 				
 				combatant_node_map[target].attacked_animation()
 				combatant_node_map[target].set_health(result.health_after)
-				await combatant_node_map[target].create_floating_text(str(result.amount), Color.RED, Motion.UP)
-				
-				if source:
-					await combatant_node_map[source].fallback_animation(combatant_node_map[target])
+				await combatant_node_map[target].create_floating_text(".1f" % result.amount, Color.RED, Motion.UP)
 				
 			Result.ResultKind.HEAL:
 				combatant_node_map[target].set_health(result.health_after)
-				await combatant_node_map[target].create_floating_text(str(result.amount), Color.GREEN, Motion.UP)
+				await combatant_node_map[target].create_floating_text("%.1f" % result.amount, Color.GREEN, Motion.UP)
 				
 			Result.ResultKind.STATUS_APPLIED:
 				var text: String
@@ -115,7 +112,7 @@ func present(results: Array[Result]) -> void:
 				combatant_node_map[target].set_mana(result.mana_after)
 			
 			_:
-				pass
+				push_error("Unknown result type to be presented")
 
 
 func show_battle_menu(combatant: Combatant) -> void:

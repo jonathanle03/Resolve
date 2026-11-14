@@ -40,7 +40,6 @@ static func resolve(actions: Array[Action]) -> Array[Result]:
 				results.append_array(res)
 			
 			if not prev_target_is_dead and target.is_dead:
-				prev_target_is_dead = true
 				results.append(_death_result(target))
 		
 		# On Turn End

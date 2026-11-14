@@ -6,20 +6,21 @@ extends Area2D
 
 const MIN_DISTANCE := 750.0
 const MAX_DISTANCE := 1500.0
-const ENCOUNTER_CHANCE := 0.001
 
 
 var distance_moved := 0.0
+var threshold: float
 var player_inside := false
 var player: Player
 
 
 func _ready() -> void:
-	if encounters.is_empty():
-		push_error()
+	assert(not encounters.is_empty(), "No encounters set")
 	
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
+	
+	threshold = randf_range(MIN_DISTANCE, MAX_DISTANCE)
 
 
 func _physics_process(delta: float) -> void:
@@ -29,18 +30,14 @@ func _physics_process(delta: float) -> void:
 	if player.velocity.length() > 0.0:
 		distance_moved += player.velocity.length() * delta
 	
-		if distance_moved >= MIN_DISTANCE:
-			if randf() <= ENCOUNTER_CHANCE or distance_moved >= MAX_DISTANCE:
-				trigger_battle()
+		if distance_moved >= threshold:
+			trigger_battle()
 
 
 func trigger_battle() -> void:
 	distance_moved = 0.0
-	
 	var encounter = encounters.pick_random()
-	GameState.overworld_position = global_position
-	GameState.encounter = encounter
-	get_tree().change_scene_to_file("uid://dsh8y6ogu1sfl")
+	GameState.start_battle(player.global_position, encounter)
 
 
 func _on_body_entered(body: Node2D) -> void:

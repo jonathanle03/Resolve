@@ -13,6 +13,7 @@ extends Resource
 
 func build_combatant() -> Combatant:
 	var combatant := Combatant.new(name, max_health, max_mana, attack, sprites)
+	assert(basic_attack, "No basic attack")
 	combatant.basic_attack = basic_attack
 	combatant.skills = skills.duplicate()
 	return combatant

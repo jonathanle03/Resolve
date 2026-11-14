@@ -5,7 +5,7 @@ extends Node2D
 
 
 enum BattleStates { START, RESOLVE_TURN_START, PRESENT_TURN_START, SELECT_ACTION, SELECT_TARGET, RESOLVE, PRESENT, VICTORY, DEFEAT }
-const BLOCKING_STATES := [BattleStates.VICTORY, BattleStates.DEFEAT]
+const BLOCKING_STATES := [BattleStates.VICTORY]
 var state := BattleStates.START
 
 
@@ -27,11 +27,6 @@ func _ready() -> void:
 	advance()
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("interact") and not event.is_echo() and (state == BattleStates.DEFEAT):
-		advance()
-
-
 func advance() -> void:
 	var actions: Array[Action]
 	var results: Array[Result]
@@ -48,18 +43,7 @@ func advance() -> void:
 				state = BattleStates.PRESENT_TURN_START
 			
 			BattleStates.PRESENT_TURN_START:
-				await _present(results)
-				
-				if _is_team_dead(ally_team):
-					print("Game Over!")
-					state = BattleStates.DEFEAT
-				elif _is_team_dead(enemy_team):
-					print("Victory!")
-					state = BattleStates.VICTORY
-				elif current_combatant.is_dead:
-					state = BattleStates.RESOLVE_TURN_START
-				else:
-					state = BattleStates.SELECT_ACTION
+				state = await _present_and_check_battle_outcome(results, BattleStates.SELECT_ACTION)
 			
 			BattleStates.SELECT_ACTION:
 				if is_player_turn and chosen_skill == null:
@@ -101,33 +85,28 @@ func advance() -> void:
 				state = BattleStates.PRESENT
 			
 			BattleStates.PRESENT:
-				await _present(results)
-				if _is_team_dead(ally_team):
-					print("Game Over!")
-					state = BattleStates.DEFEAT
-				elif _is_team_dead(enemy_team):
-					print("Victory!")
-					_battle_view.show_victory_screen()
-					state = BattleStates.VICTORY
-				else:
-					state = BattleStates.RESOLVE_TURN_START
+				state = await _present_and_check_battle_outcome(results, BattleStates.RESOLVE_TURN_START)
 			
 			BattleStates.VICTORY:
 				pass
 			
 			BattleStates.DEFEAT:
 				get_tree().change_scene_to_file("uid://chn2oyk85qt5m")
+				break
 		
 		if state in BLOCKING_STATES:
 			break
 
 
 func _battle_start() -> void:
+	assert(GameState.party_members.size() <= 3, "More than 3 party members")
 	for party_member in GameState.party_members:
 		var ally_combatant := party_member.build_combatant()
 		ally_team.append(ally_combatant)
 		party_member_map[party_member] = ally_combatant
 	
+	assert(GameState.encounter, "No encounter set")
+	assert(GameState.encounter.enemies.size() <= 3, "More than 3 enemies")
 	for enemy in GameState.encounter.enemies:
 		var enemy_combatant := enemy.build_combatant()
 		enemy_team.append(enemy_combatant)
@@ -157,33 +136,45 @@ func _create_actions(skill: Skill, source: Combatant, targets: Array[Combatant])
 	return actions
 
 
-func _present(results: Array[Result]) -> void:
-	for result in results:
-		if result.source:
-			match (result.kind):
-				Result.ResultKind.DAMAGE:
-					print("%s attacks %s for %.1f damage." % [result.source.name, result.target.name, result.amount])
-				Result.ResultKind.HEAL:
-					print("%s heals %s for %.1f health." % [result.source.name, result.target.name, result.amount])
-				Result.ResultKind.STATUS_APPLIED:
-					print("%s applies %s to %s." % [result.source.name, result.status.name, result.target.name])
-		else:
-			match (result.kind):
-				Result.ResultKind.DAMAGE:
-					print("%s takes %.1f damage." % [result.target.name, result.amount])
-				Result.ResultKind.HEAL:
-					print("%s heals for %.1f health." % [result.target.name, result.amount])
-				Result.ResultKind.STATUS_APPLIED:
-					print("%s is applied to %s." % [result.status.name, result.target.name])
-				Result.ResultKind.DEATH:
-					print("%s died." % [result.target.name])
+func _present_and_check_battle_outcome(results: Array[Result], next_state: BattleStates) -> BattleStates:
+	await _present(results)
 	
-	print()
-	#for combatant in ally_team:
-		#print("%s %.1f / %.1f HP  %.1f / %.1f MP" % [combatant.name, combatant.current_health, combatant.max_health, combatant.current_mana, combatant.max_mana])
-	#for combatant in enemy_team:
-		#print("%s %.1f / %.1f HP  %.1f / %.1f MP" % [combatant.name, combatant.current_health, combatant.max_health, combatant.current_mana, combatant.max_mana])
-	#print()
+	if _is_team_dead(ally_team):
+		print("Game Over!")
+		return BattleStates.DEFEAT
+	elif _is_team_dead(enemy_team):
+		print("Victory!")
+		_battle_view.show_victory_screen()
+		return BattleStates.VICTORY
+	elif current_combatant.is_dead:
+		return BattleStates.RESOLVE_TURN_START
+	else:
+		return next_state
+
+
+func _present(results: Array[Result]) -> void:
+	if OS.is_debug_build():
+		for result in results:
+			if result.source:
+				match (result.kind):
+					Result.ResultKind.DAMAGE:
+						print("%s attacks %s for %.1f damage." % [result.source.name, result.target.name, result.amount])
+					Result.ResultKind.HEAL:
+						print("%s heals %s for %.1f health." % [result.source.name, result.target.name, result.amount])
+					Result.ResultKind.STATUS_APPLIED:
+						print("%s applies %s to %s." % [result.source.name, result.status.name, result.target.name])
+			else:
+				match (result.kind):
+					Result.ResultKind.DAMAGE:
+						print("%s takes %.1f damage." % [result.target.name, result.amount])
+					Result.ResultKind.HEAL:
+						print("%s heals for %.1f health." % [result.target.name, result.amount])
+					Result.ResultKind.STATUS_APPLIED:
+						print("%s is applied to %s." % [result.status.name, result.target.name])
+					Result.ResultKind.DEATH:
+						print("%s died." % [result.target.name])
+		
+		print()
 	
 	await _battle_view.present(results)
 
@@ -210,6 +201,7 @@ func _set_next_combatant() -> void:
 	is_player_turn = current_combatant in ally_team
 
 
+# Update when different skill types exist
 func _get_targets(skill: Skill, source: Combatant, allies: Array[Combatant], enemies: Array[Combatant]) -> Array[Combatant]:
 	var valid_targets: Array[Combatant]
 	match skill.target_type:
