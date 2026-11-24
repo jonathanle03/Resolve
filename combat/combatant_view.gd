@@ -94,27 +94,28 @@ func death_animation() -> void:
 
 func create_floating_text(text: String, color: Color, motion: BattleView.Motion) -> void:
 	var label := Label.new()
+	label.theme = load("uid://c3ax2ll31krft")
 	add_child(label)	
 	label.text = text
-	label.position = Vector2.ZERO
+	label.position = Vector2(-70.0 if _animated_sprite_2d.flip_h else 50.0, 0)
 	label.modulate = color
 	
 	var label_tween := create_tween()
 	match motion:
 		BattleView.Motion.UP:
-			label.global_position.y += 20.0
-			label_tween.tween_property(label, "position:y", -50.0, 0.3).as_relative()
+			label_tween.tween_property(label, "position:y", -50.0, 0.5).as_relative()
 		
 		BattleView.Motion.DOWN:
-			label.global_position.y -= 40.0
-			label_tween.tween_property(label, "position:y", 50.0, 0.3).as_relative()
+			label.position.y -= 50.0
+			label_tween.tween_property(label, "position:y", 50.0, 0.5).as_relative()
 		
 		BattleView.Motion.ARC:
+			label.position.y -= 20.0
 			var start_position = label.position
 			label_tween.tween_method(
 				func (t: float) -> void:
-					label.position.y = start_position.y - 40.0 * 2 * t * (1 - t)
-			, 0.0, 1.0, 0.3
+					label.position.y = start_position.y - 50.0 * 4 * t * (1 - t)
+			, 0.0, 1.0, 0.5
 			)
 		
 	label_tween.tween_property(label, "modulate:a", 0.0, 0.3)

@@ -79,7 +79,7 @@ func present(results: Array[Result]) -> void:
 				
 				combatant_node_map[target].attacked_animation()
 				combatant_node_map[target].set_health(result.health_after)
-				await combatant_node_map[target].create_floating_text(".1f" % result.amount, Color.RED, Motion.UP)
+				await combatant_node_map[target].create_floating_text("%.1f" % result.amount, Color.RED, Motion.UP)
 				
 			Result.ResultKind.HEAL:
 				combatant_node_map[target].set_health(result.health_after)
