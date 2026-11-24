@@ -51,10 +51,7 @@ func create_team_nodes(team: Array[Combatant], markers: Array[Marker2D], mirrore
 		add_child(combatant_node)
 		combatant_node_map[combatant] = combatant_node
 		
-		combatant_node.set_max_health(combatant.max_health)
-		combatant_node.set_health(combatant.current_health)
-		combatant_node.set_max_mana(combatant.max_mana)
-		combatant_node.set_mana(combatant.current_mana)
+		combatant_node.initialize_bars(combatant.max_health, combatant.current_health, combatant.max_mana, combatant.current_mana)
 		combatant_node.position = markers[i].position
 		
 		combatant_node.set_sprites(combatant.sprites)

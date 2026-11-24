@@ -14,6 +14,8 @@ signal target_node_chosen(target: CombatantView)
 @onready var _target_box: Sprite2D = %TargetBox
 
 
+var initializing := true
+
 var max_health: float:
 	set(amount):
 		max_health = amount
@@ -22,7 +24,13 @@ var max_health: float:
 var current_health: float:
 	set(amount):
 		current_health = amount
-		_health_bar.value = amount
+		if initializing:
+			_health_bar.value = amount
+		else:
+			var health_tween := create_tween()
+			health_tween.set_ease(Tween.EASE_OUT)
+			health_tween.set_trans(Tween.TRANS_QUART)
+			health_tween.tween_property(_health_bar, "value", amount, 0.5)
 		_set_health_label()
 var max_mana: float:
 	set(amount):
@@ -32,13 +40,25 @@ var max_mana: float:
 var current_mana: float:
 	set(amount):
 		current_mana = amount
-		_mana_bar.value = amount
+		if initializing:
+			_mana_bar.value = amount
+		else:
+			var mana_tween := create_tween()
+			mana_tween.tween_property(_mana_bar, "value", amount, 0.5)
 		_set_mana_label()
 
 
 func _ready() -> void:
 	disable_click()
 	_area_2d.input_event.connect(_on_area_2d_input_event)
+
+
+func initialize_bars(max_hp: float, curr_hp: float, max_mp: float, curr_mp: float) -> void:
+	max_health = max_hp
+	current_health = curr_hp
+	max_mana = max_mp
+	current_mana = curr_mp
+	initializing = false
 
 
 func set_max_health(amount: float) -> void:
