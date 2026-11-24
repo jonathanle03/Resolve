@@ -1,0 +1,57 @@
+[gd_resource type="Theme" format=3 uid="uid://c3ax2ll31krft"]
+
+[ext_resource type="Texture2D" uid="uid://cchlig6ukxht5" path="res://assets/button_regular_nine_patch.png" id="1_6fscb"]
+[ext_resource type="Texture2D" uid="uid://bxx24utjcfhht" path="res://assets/button_pressed_nine_patch.png" id="2_4qft3"]
+[ext_resource type="FontFile" uid="uid://ccawiofktqjpy" path="res://assets/m5x7.ttf" id="3_ckgxr"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_7o3e2"]
+load_path = "res://.godot/imported/button_pressed_nine_patch.png-daa25c500849d0474643bd702e08cbc1.ctex"
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pdx7d"]
+texture = SubResource("CompressedTexture2D_7o3e2")
+texture_margin_left = 29.0
+texture_margin_top = 26.0
+texture_margin_right = 29.0
+texture_margin_bottom = 26.0
+modulate_color = Color(0.375, 0.375, 0.375, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hs86j"]
+texture = ExtResource("1_6fscb")
+texture_margin_left = 29.0
+texture_margin_top = 26.0
+texture_margin_right = 29.0
+texture_margin_bottom = 26.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_uv18l"]
+texture = ExtResource("1_6fscb")
+texture_margin_left = 29.0
+texture_margin_top = 26.0
+texture_margin_right = 29.0
+texture_margin_bottom = 26.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vs7ee"]
+texture = ExtResource("2_4qft3")
+texture_margin_left = 29.0
+texture_margin_top = 26.0
+texture_margin_right = 29.0
+texture_margin_bottom = 26.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_mg43y"]
+load_path = "res://.godot/imported/button_regular_nine_patch.png-9728f49f264977003c9b5d8142f48de8.ctex"
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yh2ok"]
+texture = SubResource("CompressedTexture2D_mg43y")
+texture_margin_left = 29.0
+texture_margin_top = 26.0
+texture_margin_right = 29.0
+texture_margin_bottom = 26.0
+modulate_color = Color(0.81640625, 0.81640625, 0.81640625, 1)
+
+[resource]
+default_font = ExtResource("3_ckgxr")
+default_font_size = 28
+Button/styles/disabled = SubResource("StyleBoxTexture_pdx7d")
+Button/styles/focus = SubResource("StyleBoxTexture_hs86j")
+Button/styles/hover = SubResource("StyleBoxTexture_uv18l")
+Button/styles/normal = SubResource("StyleBoxTexture_vs7ee")
+Button/styles/pressed = SubResource("StyleBoxTexture_yh2ok")

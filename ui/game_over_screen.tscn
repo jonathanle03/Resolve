@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://chn2oyk85qt5m"]
 
 [ext_resource type="Script" uid="uid://cldr2o8ulh7ma" path="res://ui/game_over_screen.gd" id="1_iwahs"]
+[ext_resource type="Theme" uid="uid://c3ax2ll31krft" path="res://assets/default_theme.tres" id="1_pmiq4"]
 
 [node name="GameOverScreen" type="Control" unique_id=690761490]
 layout_mode = 3
@@ -9,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_pmiq4")
 script = ExtResource("1_iwahs")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=932829986]
@@ -36,7 +38,9 @@ theme_override_constants/separation = 50
 
 [node name="Label" type="Label" parent="ColorRect/VBoxContainer" unique_id=272030956]
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 64
 text = "Game Over"
 horizontal_alignment = 1
 
